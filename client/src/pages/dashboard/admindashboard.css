@@ -1,0 +1,12 @@
+
+  .content__header h2 {
+    font-size: 30px;
+    font-weight: 600;
+    color: #00302e;
+    margin-bottom: 10px;
+  }
+  .content__header p {
+    font-size: 15px;
+    color: 000000;
+    font-weight: 400;
+  }

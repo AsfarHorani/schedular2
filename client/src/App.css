@@ -1,0 +1,16 @@
+body,
+html,.App{
+  height: 100%;
+  width: 100%;
+
+}
+
+.content {
+  margin-left: 280px;
+  padding: 50px 30px;
+}
+
+.App{
+  max-width: 2000px;
+  margin: auto;
+}
