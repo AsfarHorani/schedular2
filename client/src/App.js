@@ -13,7 +13,8 @@ import Header from './components/header/header';
 import Sidebar from './components/sidebar/sidebar';
 import AddUser from './components/AddUser/addUser';
 import AddStaffTable from './components/AddStaffTable/AddStaffTable';
-import React,{ useContext, useEffect } from 'react';
+import AddStudentTable from './components/AddStudentTimeTable/addstudenttimetabel';
+import React, { useContext, useEffect } from 'react';
 import { Context } from './context/context';
 function App() {
   const { userType } = useContext(Context);
@@ -39,9 +40,11 @@ function App() {
         <Route exact path='/Admin-dashboard' element={<Admindashboard />} />
         <Route exact path='/Staff-dashboard' element={<Staffdashboard />} />
         <Route exact path='/Student-dashboard' element={<Studentdashboard />} />
+   
         <Route path="/u/:id" element={<StaffProfile />} />
         <Route path="/s/:id" element={<StudentProfile />} />
         <Route path="/addStaffTimeTable" element={<AddStaffTable />} />
+        <Route  path="addStudentTimeTable" element={<AddStudentTable/>}/>
         <Route path="/addUser" element={<AddUser />} />
 
         <Route exact path="/signin" element={<Signin />} />

@@ -1,16 +1,18 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Card, Button, Table } from 'react-bootstrap';
 import './userprofile.css'
 import { useParams } from "react-router-dom";
 import StudentForm from "./AddUser/forms/student";
 import { BsFillTrashFill } from 'react-icons/bs';
+import { Context } from '../context/context';
 
 
 function Userprofile() {
     let { id } = useParams();
     const [student, setstudent] = useState([]);
     const [edit, setEdit] = useState(false);
+    const {userInfo,setUserInfo} = useContext(Context);
     console.log(setEdit)
     useEffect(() => {
         async function fetch() {
@@ -20,7 +22,7 @@ function Userprofile() {
                 axios.get('http://localhost:5000/getStudent/' + id).then(resp => {
 
                     setstudent(resp.data.student)
-
+                    setUserInfo(resp.data.student)
 
                 }).catch(err => {
                     console.log(err)

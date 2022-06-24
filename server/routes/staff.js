@@ -24,11 +24,25 @@ router.post('/staff-signup',[
         }),
     body('password', 'Password has to be valid.')
         .isLength({ min: 8 })
-        .trim(),
+        .trim()
+            .isEmpty()
+,
 
     body('name', "Name is't correct")
         .trim()
         .isLength({ min: 3 }),
+        
+    body('username', "username is't correct,min length 3")
+    .trim()
+    .isEmpty()
+    .isLength({ min: 3 }),
+    body('depart', "depart is't correct, min length 3")
+    .trim()
+    .isLength({ min: 3 }),
+    body('qualification', "qualification is't correct, min length 3")
+    
+    .trim()
+    .isLength({ min: 3 }),
 ], staffController.signup);
 
 //getTimeTable

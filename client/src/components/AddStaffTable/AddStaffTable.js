@@ -7,6 +7,7 @@ import "./AddStaffTable.css"
 function AddStaffTable() {
     const [file,setFile] = useState(null);
     
+    
     const submitFile=(e)=>{
       e.preventDefault();
         let formData = new FormData();

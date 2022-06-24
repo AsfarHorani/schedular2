@@ -27,9 +27,10 @@ exports.signup = (req, res, next) => {
                 name: name,
                 email: email,
                 password: hashedPassword,
+                userId: userId,
                 username: username,
                 depart: depart,
-                userId: userId,
+              
                 qualification: qualification
             })
             return staff.save()

@@ -101,13 +101,15 @@ exports.signin = (req, res, next) => {
 exports.uploadTimeTable = async (req, res, next) => {
 
     try {
+
+        console.log(req.file)
+        console.log(req.fileValidationError)
         if (req.fileValidationError) {
             const error = new Error(req.fileValidationError || 'Validation failed.');
             error.statusCode = 422;
-
+    
             throw error;
         }
-
 
         let data = []
         let time = ["8:45-09:00",
@@ -167,7 +169,7 @@ exports.uploadTimeTable = async (req, res, next) => {
                     let yCount = table[x].length;
                     let day = table[x][0];
                     for (let y = 1; y < yCount; y++) {
-                     
+
                         if (table[x][y] !== "NA") {
                             tableObj[day].push([time[y - 1], table[x][y]])
                         }
@@ -181,10 +183,18 @@ exports.uploadTimeTable = async (req, res, next) => {
 
                 try {
                     console.log(tableObj)
+
                     const filter = { userId: userId };
                     const update = { timetable: tableObj };
                     const docs = await Student.findOneAndUpdate(filter, update)
+                    if (!docs) {
+                        if (!docs) {
 
+                            const error = new Error("Roll no is incorrect");
+                            error.statusCode = 401;
+                            throw error;
+                        }
+                    }
                     res.status(200).json({
                         data: docs
                     })
