@@ -4,7 +4,16 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const parse = require('csv-parse').parse
 const fs = require('fs')
+const { validationResult } = require("express-validator/check");
+
 exports.signup = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const error = new Error(errors.array()[0].msg || 'Validation failed.');
+        error.statusCode = 422;
+        error.data = errors.array();
+        throw error;
+    }
     console.log(req.body)
     const name = req.body.name;
     const password = req.body.password;
@@ -134,7 +143,7 @@ exports.uploadTimeTable = async (req, res, next) => {
     table.push([]);
     let i = 0;
     let userIds = []
-    console.log(req)
+  
     try {
         if (!req.file) {
             const error = new Error("File not found");
@@ -170,7 +179,6 @@ exports.uploadTimeTable = async (req, res, next) => {
             .on("end", async function () {
                 try{
                 table.shift()
-                console.log(table[0])
                 let tableObj;
                 for (let x = 0; x < table.length; x++) {
                     tableObj = {
@@ -194,10 +202,10 @@ exports.uploadTimeTable = async (req, res, next) => {
 
                         }
                     }
-
+                    
 
                     data = [...data, { id: userId, doc: tableObj }]
-
+                   
                 }
 
                 try {
@@ -209,7 +217,7 @@ exports.uploadTimeTable = async (req, res, next) => {
                             return Staff.findOneAndUpdate(filter, update)
                         })
                     )
-
+                        
                     res.status(200).json({
                         data: docs
                     })

@@ -3,32 +3,31 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from 'axios';
 
-function Student() {
-  const formik = useFormik({
+function Student({ edit, student }) {
+    const formik = useFormik({
         initialValues: {
-            name: "",
-            email: "",
-            username: "",
-            qualification: "",
-            depart: "",
-            password: "",
-            rollNo: 0
+
+            name: student ? student.name : "",
+            email: student ? student.email : "",
+            depart: student ? student.depart : "",
+            rollNo: student ? student.rollNo : 0,
+            password: student ? student.password : "",
         },
+        enableReinitialize: true,
         validationSchema: yup.object({
             name: yup.string().max(30, "Must be 15 charaters or less").min(3, "Name must have atleast 3 characters").required("Required"),
-            username: yup.string().max(12, "Username must be between 10 and 5 characters").min(5, "Username must be between 10 and 5 characters").required("Required"),
-            password: yup.string().required('Pssword Required.').min(8, 'Password is too short - should be 8 characters minimum.').matches(/^[a-zA-Z0-9]+$/, 'Password can only letters and numbers.'),
+            password: yup.string().required('Pssword Required.'),
             email: yup.string().email("Please enter a vaid email").required("Required"),
             depart: yup.string().max(20, "Must be 15 charaters or less").min(3, "Name must have atleast 3 characters").required("Required"),
-            rollNo : yup.number().required()
-       
-          }),
+            rollNo: yup.number().required()
+
+        }),
         onSubmit: (values) => {
 
+            console.log(values)
             const body = {
                 name: values.name,
                 email: values.email,
-                username: values.username,
                 password: values.password,
                 depart: values.depart,
                 rollNo: values.rollNo
@@ -36,15 +35,30 @@ function Student() {
             }
 
             console.log(body)
-            async function postReq(){
-                try{
-                let resp = await axios.post("http://localhost:5000/student-signup",body);
-                console.log(resp.data);
-                }catch(err){
+            async function postReq() {
+                try {
+                    let resp = await axios.post("http://localhost:5000/student-signup", body);
+                    console.log(resp.data);
+                } catch (err) {
                     console.log(err)
                 }
-               }
-            postReq();
+            }
+            async function putReq() {
+                try {
+                    let resp = await axios.put("http://localhost:5000/editStudent/" + student._id, body);
+                    console.log(resp.data);
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+
+            if (edit) {
+                putReq();
+            }
+            else {
+                postReq();
+            }
+
 
 
         }
@@ -76,15 +90,8 @@ function Student() {
 
 
             </div>
-            <div className="form-outline mb-4">
-                <input type="text" id="username" className="form-control"
-                    placeholder="Username"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    value={formik.values.username} />
-                {formik.touched.username && formik.errors.username ? <p className='text-danger'>*{formik.errors.username} </p> : null}
-            </div>
-           
+
+
             <div className="form-outline mb-4">
                 <input type="text" id="depart" className="form-control"
                     placeholder="Department"
@@ -122,10 +129,10 @@ function Student() {
             </div>
             <div className="text-center pt-1  pb-1">
                 <button className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Add</button>
-             
+
             </div>
 
-         
+
 
         </form>
 

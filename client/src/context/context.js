@@ -13,38 +13,38 @@ export const ContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError]  = useState(null)
   const [navselected, setNavselected] = useState("staff");
-
+  const [userType, setUserType] = useState("");
   const navigate = useNavigate();
   
   
-  useEffect(() => {
+  // useEffect(() => {
 
-    function fetchData() {
-      console.log("rendering app..")
-      const expiryDate = localStorage.getItem('expiryDate') || null;
-      const _token = localStorage.getItem('token') || null;
-      if (!_token || !expiryDate) {
-        return
-      }
-      console.log("signing in")
-      if (new Date(expiryDate) <= new Date()) {
+  //   function fetchData() {
+  //     console.log("rendering app..")
+  //     const expiryDate = localStorage.getItem('expiryDate') || null;
+  //     const _token = localStorage.getItem('token') || null;
+  //     if (!_token || !expiryDate) {
+  //       return
+  //     }
+  //     console.log("signing in")
+  //     if (new Date(expiryDate) <= new Date()) {
 
-        logoutHandler();
-        return;
-      }
+  //       logoutHandler();
+  //       return;
+  //     }
 
-      const _userInfo =  JSON.parse(localStorage.getItem('userInfo'));
-      console.log(_userInfo)
-      const remainingMilliseconds = new Date(expiryDate).getTime() - new Date().getTime();
-      setUserInfo(_userInfo)
-      setAuth(true)
-      navigate("/");
-      setToken(_token);
-      setAutoLogout(remainingMilliseconds);
-    }
+  //     const _userInfo =  JSON.parse(localStorage.getItem('userInfo'));
+  //     console.log(_userInfo)
+  //     const remainingMilliseconds = new Date(expiryDate).getTime() - new Date().getTime();
+  //     setUserInfo(_userInfo)
+  //     setAuth(true)
+  //     navigate("/");
+  //     setToken(_token);
+  //     setAutoLogout(remainingMilliseconds);
+  //   }
 
-    return fetchData();
-  }, [isAuth])
+  //   return fetchData();
+  // }, [isAuth])
 
 //   const signupHandler = (data) => {
 
@@ -67,43 +67,43 @@ export const ContextProvider = ({ children }) => {
 //       })
 //   }
 
-  const adminSigninHandler = (data) => {
+  // const adminSigninHandler = (data) => {
 
-    setLoading(true)
-    axios.post('http://localhost:5000/admin-signin', data,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })
-      .then((res) => {
-        setLoading(false)
-        res = res.data 
-        console.log(res.userInfo) 
+  //   setLoading(true)
+  //   axios.post('http://localhost:5000/admin-signin', data,
+  //     {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       }
+  //     })
+  //     .then((res) => {
+  //       setLoading(false)
+  //       res = res.data 
+  //       console.log(res.userInfo) 
         
-        const _userInfo = {...res.userInfo, type:"admin"} 
-        setToken(res.token)
-        setUserInfo(_userInfo)
-        const remainingMilliseconds = 60 * 60 * 1000;
-        const expiryDate = new Date(
-          new Date().getTime() + remainingMilliseconds
-        );
+  //       const _userInfo = {...res.userInfo, type:"admin"} 
+  //       setToken(res.token)
+  //       setUserInfo(_userInfo)
+  //       const remainingMilliseconds = 60 * 60 * 1000;
+  //       const expiryDate = new Date(
+  //         new Date().getTime() + remainingMilliseconds
+  //       );
 
 
-        setAutoLogout(remainingMilliseconds);
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('userInfo', JSON.stringify(_userInfo));
+  //       setAutoLogout(remainingMilliseconds);
+  //       localStorage.setItem('token', res.token);
+  //       localStorage.setItem('userInfo', JSON.stringify(_userInfo));
 
-        localStorage.setItem('expiryDate', expiryDate.toISOString());
-        setAuth(true);
-        navigate("/");
+  //       localStorage.setItem('expiryDate', expiryDate.toISOString());
+  //       setAuth(true);
+  //       navigate("/");
 
-      }).catch(err => {
-        setLoading(false);
-        console.log(err.response.data);
-        setAuthError(err.response.data.message)
-      })
-  }
+  //     }).catch(err => {
+  //       setLoading(false);
+  //       console.log(err.response.data);
+  //       setAuthError(err.response.data.message)
+  //     })
+  // }
 
 //  const studnetSigninHandler = (data) => {
 
@@ -145,20 +145,20 @@ export const ContextProvider = ({ children }) => {
 
 
 
-  const logoutHandler = () => {
+  // const logoutHandler = () => {
  
-    localStorage.removeItem('token');
-    localStorage.removeItem('userInfo');
-    localStorage.removeItem('expiryDate');
+  //   localStorage.removeItem('token');
+  //   localStorage.removeItem('userInfo');
+  //   localStorage.removeItem('expiryDate');
  
-    setAuth(false);
-  }
+  //   setAuth(false);
+  // }
 
-  const setAutoLogout = milliseconds => {
-    setTimeout(() => {
-      logoutHandler();
-    }, milliseconds);
-  };
+  // const setAutoLogout = milliseconds => {
+  //   setTimeout(() => {
+  //     logoutHandler();
+  //   }, milliseconds);
+  // };
 
 
 
@@ -169,15 +169,15 @@ export const ContextProvider = ({ children }) => {
         {
           isAuth,
           setAuth,
-          adminSigninHandler,
-          logoutHandler,
-          token,
+           token,
           setToken,
           userInfo,
           loading,
           authError,
           navselected,
-          setNavselected
+          setNavselected,
+          userType,
+          setUserType
         }
 
       }

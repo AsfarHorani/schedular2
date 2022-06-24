@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { Card, Button, Table } from 'react-bootstrap';
 import './userprofile.css'
 import { useParams } from "react-router-dom";
-import StaffForm from "./AddUser/forms/staff";
+import StudentForm from "./AddUser/forms/student";
 import { BsFillTrashFill } from 'react-icons/bs';
+
 
 function Userprofile() {
     let { id } = useParams();
-    const [staff, setStaff] = useState([]);
+    const [student, setstudent] = useState([]);
     const [edit, setEdit] = useState(false);
     console.log(setEdit)
     useEffect(() => {
@@ -16,9 +17,9 @@ function Userprofile() {
 
             if (id) {
                 console.log(id)
-                axios.get('http://localhost:5000/getStaff/' + id).then(resp => {
+                axios.get('http://localhost:5000/getStudent/' + id).then(resp => {
 
-                    setStaff(resp.data.staff)
+                    setstudent(resp.data.student)
 
 
                 }).catch(err => {
@@ -29,7 +30,7 @@ function Userprofile() {
         }
         fetch();
     }, [id])
-    console.log(staff.timetable)
+    console.log(student.timetable)
 
     let monrows = null
     let tuerows = null
@@ -39,71 +40,75 @@ function Userprofile() {
 
     const deleteHandler = async () => {
         try {
-            let resp = await axios.delete("http://localhost:5000/deleteStaff/" + staff._id);
+            let resp = await axios.delete("http://localhost:5000/deleteStudent/" + student._id);
             console.log(resp.data);
         } catch (err) {
             console.log(err)
         }
     }
-
     const deleteRowHandler = async (id, day) => {
         console.log(id, day)
         const body = { id: id, day: day }
         console.log(body)
         try {
-            let resp = await axios.post("http://localhost:5000/staff-deleteRow/" + staff._id, body 
+            let resp = await axios.post("http://localhost:5000/student-deleteRow/" + student._id, body 
             );
             console.log(resp.data);
-            setStaff(resp.data.staff);
+            setstudent(resp.data.student);
         } catch (err) {
             console.log(err)
         }
     }
-
-    if (staff.timetable) {
-        monrows = staff.timetable.monday.map((e, i) => {
+      
+    if (student.timetable) {
+        monrows = student.timetable.monday.map((e,i) => {
             return (
-                <tr key={i}>
+                <tr>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
                     <td onClick={() => deleteRowHandler(i, "monday")}><BsFillTrashFill /></td>
+
                 </tr>)
         })
 
-        tuerows = staff.timetable.tuesday.map((e, i) => {
+        tuerows = student.timetable.tuesday.map((e,i)  => {
             return (
-                <tr key={i}>
+                <tr>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
                     <td onClick={() => deleteRowHandler(i, "tuesday")}><BsFillTrashFill /></td>
+
                 </tr>)
         })
 
-        wedrows = staff.timetable.wednesday.map((e, i) => {
+        wedrows = student.timetable.wednesday.map((e,i) => {
             return (
-                <tr key={i}>
+                <tr>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
                     <td onClick={() => deleteRowHandler(i, "wednesday")}><BsFillTrashFill /></td>
+
                 </tr>)
         })
 
-        thurows = staff.timetable.thursday.map((e, i) => {
+        thurows = student.timetable.thursday.map((e,i)  => {
             return (
-                <tr key={i}>
+                <tr>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
                     <td onClick={() => deleteRowHandler(i, "thursday")}><BsFillTrashFill /></td>
+
                 </tr>)
         })
 
 
-        frirows = staff.timetable.friday.map((e, i) => {
+        frirows = student.timetable.friday.map((e,i) => {
             return (
-                <tr key={i}>
+                <tr>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
                     <td onClick={() => deleteRowHandler(i, "friday")}><BsFillTrashFill /></td>
+
                 </tr>)
         })
 
@@ -114,27 +119,22 @@ function Userprofile() {
 
     }
     let infoCard = (<Card className="card-horizontal">
-        <Card.Header as="h5">Staff Information</Card.Header>
+        <Card.Header as="h5">Student Information</Card.Header>
         <Card.Body>
-            <Card.Title>{staff.name}</Card.Title>
+            <Card.Title>{student.name}</Card.Title>
             <Card.Text>
-                Id: {staff.userId}
+                Id: {student.userId}
             </Card.Text>
             <Card.Text>
-                Username: {staff.username}
+                RollNo: {student.rollNo}
             </Card.Text>
+
             <Card.Text>
-                Qualification : {staff.qualification}
+                Email: {student.email}
             </Card.Text>
-            <Card.Text>
-                Department: {staff.depart}
-            </Card.Text>
-            <Card.Text>
-                Email: {staff.email}
-            </Card.Text>
-            <Button onClick={() => setEdit(prev => !prev)} variant="primary">Edit</Button>
+            <Button onClick={() => setEdit(prev => !prev)} variant="secondary">Cancel</Button>
             {/* deleteHandler */}
-            <Button onClick={() => deleteHandler()} variant="danger">Delete this user</Button>
+            <Button onClick={() => deleteHandler()} variant="danger">Delete this User</Button>
 
 
 
@@ -142,9 +142,9 @@ function Userprofile() {
     </Card>)
     if (edit) {
         infoCard = (<Card className="card-horizontal">
-            <Card.Header as="h5">Staff Information</Card.Header>
+            <Card.Header as="h5">Student Information</Card.Header>
             <Card.Body>
-                <StaffForm edit={edit} staff={staff} />
+                <StudentForm edit={edit} student={student} />
                 <Button onClick={() => setEdit(prev => !prev)} variant="primary">Edit his info</Button>
             </Card.Body>
         </Card>)
@@ -161,8 +161,7 @@ function Userprofile() {
 
                         <th>Time</th>
                         <th>??</th>
-                        <th>delete</th>
-
+                        <th>Delete</th>
 
 
                     </tr>
@@ -179,13 +178,17 @@ function Userprofile() {
 
                         <th>Time</th>
                         <th>??</th>
-                        <th>delete</th>
+                        <th>Delete</th>
 
                     </tr>
                 </thead>
                 <tbody>
 
                     {tuerows}
+
+
+
+
                 </tbody>
             </Table>
             <h3>Wednesday</h3>
@@ -194,8 +197,8 @@ function Userprofile() {
                     <tr>
                         <td>Time</td>
                         <td>??</td>
-                        <th>delete</th>
 
+                        <th>Delete</th>
 
 
                     </tr>
@@ -215,7 +218,7 @@ function Userprofile() {
 
                         <td>Day</td>
                         <td>Mark</td>
-                        <th>delete</th>
+                        <th>Delete</th>
 
 
                     </tr>
@@ -236,7 +239,7 @@ function Userprofile() {
 
                         <th>Time</th>
                         <th>??</th>
-                        <th>delete</th>
+                        <th>Delete</th>
 
 
 

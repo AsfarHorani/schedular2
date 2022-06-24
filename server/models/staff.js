@@ -6,6 +6,10 @@ const staffSchema = new Schema({
     name: {
         type: String
     },
+    qualification:{
+        type: String,
+        req: true
+    },
     username: {
         type: String,
         required: true,

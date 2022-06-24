@@ -3,8 +3,17 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const parse = require('csv-parse').parse
 const fs = require('fs');
+const { validationResult } = require("express-validator/check");
 
 exports.signup = (req, res, next) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const error = new Error(errors.array()[0].msg || 'Validation failed.');
+        error.statusCode = 422;
+        error.data = errors.array();
+        throw error;
+    }
     const name = req.body.name;
     const password = req.body.password;
     const email = req.body.email;
@@ -158,7 +167,7 @@ exports.uploadTimeTable = async (req, res, next) => {
                     let yCount = table[x].length;
                     let day = table[x][0];
                     for (let y = 1; y < yCount; y++) {
-
+                     
                         if (table[x][y] !== "NA") {
                             tableObj[day].push([time[y - 1], table[x][y]])
                         }
@@ -172,7 +181,7 @@ exports.uploadTimeTable = async (req, res, next) => {
 
                 try {
                     console.log(tableObj)
-                    const filter = { rollNo: userId };
+                    const filter = { userId: userId };
                     const update = { timetable: tableObj };
                     const docs = await Student.findOneAndUpdate(filter, update)
 
@@ -237,16 +246,79 @@ exports.getAllStudents = async (req, res, next) => {
 exports.deleteStudent = async (req, res, next) => {
     try {
         const studentid = req.params.sid;
-        if(!studentid){
+        if (!studentid) {
             const error = new Error("studentid is undefined, make sure to add a studentid in the params");
             error.statusCode = 401;
             throw error;
-        
+
         }
-        const resp = await Student.deleteOne({_id:studentid})
+        const resp = await Student.deleteOne({ _id: studentid })
         console.log(resp)
 
     } catch (err) {
         console.log(err)
     }
+}
+
+
+exports.editStudent = async (req, res, next) => {
+    const name = req.body.name;
+    const password = req.body.password;
+    const email = req.body.email;
+    const rollNo = req.body.rollNo;
+    const depart = req.body.depart;
+    var userId = Math.floor(10000 + Math.random() * 90000);
+    const id = req.params.id
+    try {
+        let student = await Student.findOne({ _id: id })
+
+
+        student.name = name;
+        student.email = email;
+        student.depart = depart;
+        student.userId = userId;
+        student.rollNo = rollNo
+        let editedStd = await student.save()
+        res.status(200).json({
+            message: "Success",
+            editedStudent: editedStd
+        })
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+
+}
+
+exports.getStudent = async (req, res, next) => {
+    const id = req.params.id;
+    console.log(id);
+    try {
+
+        const student = await Student.findById(id);
+
+
+        if (!student) {
+
+            const error = new Error("staff doesn't exist");
+            error.statusCode = 401;
+            throw error;
+        }
+
+        res.status(200).json({
+            message: "fetch staff success!",
+            student: student
+        })
+
+
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+
+
 }

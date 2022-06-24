@@ -28,7 +28,7 @@ export default function Students() {
         console.log(allstudents)
         content = allstudents.map((user) => {
 
-            return <Card user={user} />
+            return <Card type={"students"} user={user} />
         })
     }
 

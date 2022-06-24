@@ -1,17 +1,25 @@
 const Staff = require('../models/staff');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const { validationResult } = require("express-validator/check");
 
 
 exports.signup = (req, res, next) => {
-
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const error = new Error(errors.array()[0].msg || 'Validation failed.');
+        error.statusCode = 422;
+        error.data = errors.array();
+        throw error;
+    }
 
     const name = req.body.name;
     const password = req.body.password;
     const email = req.body.email;
     const username = req.body.username;
     const depart = req.body.depart;
-    let id = Math.floor(10000 + Math.random() * 90000);
+    let userId = req.body.userId
+    const qualification = req.body.qualification;
 
     bcrypt.hash(password, 12)
         .then(hashedPassword => {
@@ -21,7 +29,8 @@ exports.signup = (req, res, next) => {
                 password: hashedPassword,
                 username: username,
                 depart: depart,
-                userId: id
+                userId: userId,
+                qualification: qualification
             })
             return staff.save()
         }).then(result => {
@@ -145,7 +154,7 @@ exports.getAllStaff = async (req, res, next) => {
 
 exports.deleteStaff = async (req, res, next) => {
     try {
-        const staffid = req.params.sid;
+        const staffid = req.params.id;
         if (!staffid) {
             const error = new Error("staffid is undefined, make sure to add a staffid in the params");
             error.statusCode = 401;
@@ -170,7 +179,7 @@ exports.getStaff = async (req, res, next) => {
     try {
 
         const staff = await Staff.findById(id);
-   
+
 
         if (!staff) {
 
@@ -195,3 +204,61 @@ exports.getStaff = async (req, res, next) => {
 
 }
 
+
+exports.editStaff = async (req, res, next) => {
+    const name = req.body.name;
+    const password = req.body.password;
+    const email = req.body.email;
+    const username = req.body.username;
+    const depart = req.body.depart;
+    let userId = req.body.userId
+    const id = req.params.id;
+    const qualification = req.body.qualification;
+    console.log(qualification);
+    try {
+        let staff = await Staff.findOne({ _id: id })
+
+
+        staff.name = name;
+        staff.email = email;
+        staff.username = username;
+        staff.depart = depart;
+        staff.userId = userId;
+        staff.qualification = qualification
+        let editedStaff = await staff.save()
+        res.status(200).json({
+            message: "Success",
+            editedStaff: editedStaff
+        })
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+
+}
+
+exports.deleteStaffRow = async (req, res, next) => {
+    try {
+        const day = req.body.day;
+        const ind = req.body.id;
+        const id = req.params.id;
+        console.log(req.body, ind, day)
+        const st = await Staff.findById(id);
+        let table = st.timetable;
+        table[day].splice(id, 1);
+        st.timetable = table
+
+        const resp = await st.save();
+        res.status(200).json({
+            staff: resp,
+            message: "sucess"
+        })
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}

@@ -28,7 +28,7 @@ export default function Staffs() {
         console.log(allStaff)
         content = allStaff.map((user) => {
 
-            return <Card user={user} />
+            return <Card type={"staff"} user={user} />
         })
     }
 

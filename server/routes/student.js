@@ -8,5 +8,7 @@ router.post('/student-signin', studentController.signin);
 router.post('/student-signup', studentController.signup);
 router.post('/student-uploadTimeTable',upload.single('file'), studentController.uploadTimeTable);
 router.get('/getStudents',studentController.getAllStudents)
+router.get('/getStudent/:id',studentController.getStudent)
+router.put('/editStudent/:id', studentController.editStudent);
 
 module.exports = router;

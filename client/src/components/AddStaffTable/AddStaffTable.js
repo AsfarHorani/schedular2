@@ -7,7 +7,6 @@ import "./AddStaffTable.css"
 function AddStaffTable() {
     const [file,setFile] = useState(null);
     
-
     const submitFile=(e)=>{
       e.preventDefault();
         let formData = new FormData();
@@ -31,8 +30,9 @@ function AddStaffTable() {
                     <Form.Label>Choose File</Form.Label>
                     <input id="input-file"
                         onChange={(e) =>  { setFile(e.target.files[0]); }}
-                        type="file"
-                        name="file"
+                        type={"file"}
+                        name={"file"}
+                        accept={".csv"}
                         placeholder='Upload File' />                    <Form.Text className="text-muted">
                         Make sure to choose a .csv file                    </Form.Text>
                 </Form.Group>

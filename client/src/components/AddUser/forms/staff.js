@@ -1,29 +1,40 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from 'axios';
 
-function Staff() {
-  const formik = useFormik({
-        initialValues: {
-            name: "",
-            email: "",
-            username: "",
-            qualification: "",
-            depart: "",
-            password: "",
+function Staff({ edit, staff }) {
+ 
+    let initVal = {}
+    let initVal2 = { ...initVal }
+    useEffect(() => {
 
+
+
+    }, [edit])
+  
+    const formik = useFormik({
+        initialValues:
+        {
+            name:  staff? staff.name : "",
+            email: staff? staff.email :"",
+            username: staff? staff.username : "",
+            qualification:staff? staff.qualification : "",
+            depart: staff ? staff.depart:"",
+            userId: staff ? staff.userId:"",
+            password:  staff? staff.password :"",
         },
+        enableReinitialize: true,
         validationSchema: yup.object({
             name: yup.string().max(30, "Must be 15 charaters or less").min(3, "Name must have atleast 3 characters").required("Required"),
             username: yup.string().max(12, "Username must be between 10 and 5 characters").min(5, "Username must be between 10 and 5 characters").required("Required"),
-            password: yup.string().required('Pssword Required.').min(8, 'Password is too short - should be 8 characters minimum.').matches(/^[a-zA-Z0-9]+$/, 'Password can only letters and numbers.'),
+            password: yup.string().required('Pssword Required.'),
             email: yup.string().email("Please enter a vaid email").required("Required"),
             depart: yup.string().max(20, "Must be 15 charaters or less").min(3, "Name must have atleast 3 characters").required("Required"),
             qualification: yup.string().max(40, "Must be 15 charaters or less").min(3, "Name must have atleast 3 characters").required("Required"),
+            userId: yup.number()
 
-       
-          }),
+        }),
         onSubmit: (values) => {
 
             const body = {
@@ -32,22 +43,35 @@ function Staff() {
                 username: values.username,
                 password: values.password,
                 qualification: values.qualification,
-                depart: values.depart
+                depart: values.depart,
+                userId: values.userId
 
             }
 
             console.log(body)
-            async function postReq(){
-                try{
-                let resp = await axios.post("http://localhost:5000/staff-signup",body);
-                console.log(resp.data);
-                }catch(err){
+            async function postReq() {
+                try {
+                    let resp = await axios.post("http://localhost:5000/staff-signup", body);
+                    console.log(resp.data);
+                } catch (err) {
                     console.log(err)
                 }
-               }
-    
-               postReq();
+            }
+            async function putReq() {
+                try {
+                    let resp = await axios.put("http://localhost:5000/editStaff/"+staff._id, body);
+                    console.log(resp.data);
+                } catch (err) {
+                    console.log(err)
+                }
+            }
 
+            if(edit){
+                putReq();
+            }
+            else{
+            postReq();
+            }
 
 
         }
@@ -86,6 +110,14 @@ function Staff() {
                     onChange={formik.handleChange}
                     value={formik.values.username} />
                 {formik.touched.username && formik.errors.username ? <p className='text-danger'>*{formik.errors.username} </p> : null}
+            </div>
+              <div className="form-outline mb-4">
+                <input type="text" id="userId" className="form-control"
+                    placeholder="User ID"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.userId} />
+                {formik.touched.userId && formik.errors.userId ? <p className='text-danger'>*{formik.errors.userId} </p> : null}
             </div>
             <div className="form-outline mb-4">
                 <input type="text" id="qualification" className="form-control"
@@ -127,10 +159,10 @@ function Staff() {
 
             <div className="text-center pt-1  pb-1">
                 <button className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Add</button>
-             
+
             </div>
 
-         
+
 
         </form>
 

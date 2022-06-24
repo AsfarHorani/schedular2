@@ -1,10 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Card, Button, Table } from 'react-bootstrap';
-import './userprofile.css'
+import '../../../components/userprofile.css';
 import { useParams } from "react-router-dom";
-import StaffForm from "./AddUser/forms/staff";
-import { BsFillTrashFill } from 'react-icons/bs';
 
 function Userprofile() {
     let { id } = useParams();
@@ -14,9 +12,9 @@ function Userprofile() {
     useEffect(() => {
         async function fetch() {
 
-            if (id) {
-                console.log(id)
-                axios.get('http://localhost:5000/getStaff/' + id).then(resp => {
+            if (true) {
+             
+                axios.get('http://localhost:5000/getStaff/62b5d3f4392ff436092c6ff5').then(resp => {
 
                     setStaff(resp.data.staff)
 
@@ -37,28 +35,6 @@ function Userprofile() {
     let thurows = null;
     let frirows = null;
 
-    const deleteHandler = async () => {
-        try {
-            let resp = await axios.delete("http://localhost:5000/deleteStaff/" + staff._id);
-            console.log(resp.data);
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const deleteRowHandler = async (id, day) => {
-        console.log(id, day)
-        const body = { id: id, day: day }
-        console.log(body)
-        try {
-            let resp = await axios.post("http://localhost:5000/staff-deleteRow/" + staff._id, body 
-            );
-            console.log(resp.data);
-            setStaff(resp.data.staff);
-        } catch (err) {
-            console.log(err)
-        }
-    }
 
     if (staff.timetable) {
         monrows = staff.timetable.monday.map((e, i) => {
@@ -66,7 +42,6 @@ function Userprofile() {
                 <tr key={i}>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
-                    <td onClick={() => deleteRowHandler(i, "monday")}><BsFillTrashFill /></td>
                 </tr>)
         })
 
@@ -75,7 +50,6 @@ function Userprofile() {
                 <tr key={i}>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
-                    <td onClick={() => deleteRowHandler(i, "tuesday")}><BsFillTrashFill /></td>
                 </tr>)
         })
 
@@ -84,7 +58,6 @@ function Userprofile() {
                 <tr key={i}>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
-                    <td onClick={() => deleteRowHandler(i, "wednesday")}><BsFillTrashFill /></td>
                 </tr>)
         })
 
@@ -93,7 +66,6 @@ function Userprofile() {
                 <tr key={i}>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
-                    <td onClick={() => deleteRowHandler(i, "thursday")}><BsFillTrashFill /></td>
                 </tr>)
         })
 
@@ -103,8 +75,7 @@ function Userprofile() {
                 <tr key={i}>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
-                    <td onClick={() => deleteRowHandler(i, "friday")}><BsFillTrashFill /></td>
-                </tr>)
+                    </tr>)
         })
 
 
@@ -113,42 +84,33 @@ function Userprofile() {
 
 
     }
-    let infoCard = (<Card className="card-horizontal">
-        <Card.Header as="h5">Staff Information</Card.Header>
-        <Card.Body>
-            <Card.Title>{staff.name}</Card.Title>
-            <Card.Text>
-                Id: {staff.userId}
-            </Card.Text>
-            <Card.Text>
-                Username: {staff.username}
-            </Card.Text>
-            <Card.Text>
-                Qualification : {staff.qualification}
-            </Card.Text>
-            <Card.Text>
-                Department: {staff.depart}
-            </Card.Text>
-            <Card.Text>
-                Email: {staff.email}
-            </Card.Text>
-            <Button onClick={() => setEdit(prev => !prev)} variant="primary">Edit</Button>
-            {/* deleteHandler */}
-            <Button onClick={() => deleteHandler()} variant="danger">Delete this user</Button>
-
-
-
-        </Card.Body>
-    </Card>)
-    if (edit) {
+    let infoCard = null
+    if (staff) {
         infoCard = (<Card className="card-horizontal">
             <Card.Header as="h5">Staff Information</Card.Header>
             <Card.Body>
-                <StaffForm edit={edit} staff={staff} />
-                <Button onClick={() => setEdit(prev => !prev)} variant="primary">Edit his info</Button>
+                <Card.Title>{staff.name}</Card.Title>
+                <Card.Text>
+                    Id: {staff.userId}
+                </Card.Text>
+                <Card.Text>
+                    Username: {staff.username}
+                </Card.Text>
+                <Card.Text>
+                    Qualification : {staff.qualification}
+                </Card.Text>
+                <Card.Text>
+                    Department: {staff.depart}
+                </Card.Text>
+                <Card.Text>
+                    Email: {staff.email}
+                </Card.Text>
+            
+
             </Card.Body>
         </Card>)
     }
+
 
 
     return (
@@ -161,7 +123,6 @@ function Userprofile() {
 
                         <th>Time</th>
                         <th>??</th>
-                        <th>delete</th>
 
 
 
@@ -179,7 +140,6 @@ function Userprofile() {
 
                         <th>Time</th>
                         <th>??</th>
-                        <th>delete</th>
 
                     </tr>
                 </thead>
@@ -194,7 +154,6 @@ function Userprofile() {
                     <tr>
                         <td>Time</td>
                         <td>??</td>
-                        <th>delete</th>
 
 
 
@@ -215,7 +174,6 @@ function Userprofile() {
 
                         <td>Day</td>
                         <td>Mark</td>
-                        <th>delete</th>
 
 
                     </tr>
@@ -236,7 +194,6 @@ function Userprofile() {
 
                         <th>Time</th>
                         <th>??</th>
-                        <th>delete</th>
 
 
 
