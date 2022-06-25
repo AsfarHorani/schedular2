@@ -16,14 +16,6 @@ router.post('/admin-signup', [
                 return Promise.reject('Email already in use by an admin');
             }
         }),
-    body('userId', "userId has to be valid").isNumeric()
-        .withMessage('Please enter a valid and numeric userId, It should be of length 5').isLength({ min: 5, max: 5 }).withMessage("UserId should be a valid number of length 5")
-        .custom(async value => {
-            const admin = await Admin.findOne({ userId: value });
-            if (admin) {
-                return Promise.reject('This userId has already assigned to someone');
-            }
-        }),
     body('password', 'Password has to be valid.')
         .isLength({ min: 8 })
         .trim(),
@@ -34,5 +26,8 @@ router.post('/admin-signup', [
 ], adminController.signup);
 router.post('/admin-uploadTimeTable', upload.single('file'), adminController.uploadTimeTable);
 router.get('/getAdmins', adminController.getAllAdmins)
+router.get('/getAdmin/:id', adminController.getAdmin)
+router.put('/editAdmin/:id', adminController.editAdmin);
+router.delete('/deleteAdmin/:id', adminController.deleteAdmin);
 
 module.exports = router;

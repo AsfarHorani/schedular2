@@ -34,7 +34,6 @@ function Header() {
             <Link className="nav-link active" aria-current="page" to="/addStudentTimeTable">Add Timetable</Link>
         </li>)
     }
-
     return (
         <nav className="header navbar navbar-expand-sm">
             <div className="header container">

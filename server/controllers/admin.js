@@ -19,8 +19,8 @@ exports.signup = (req, res, next) => {
     const password = req.body.password;
     const email = req.body.email;
     const username = req.body.username;
-    const id = req.body.staffid;
-    console.log(req.body)
+    let userId = req.body.userId
+    console.log(req.body.userId)
     bcrypt.hash(password, 12)
         .then(hashedPassword => {
             const admin = new Admin({
@@ -28,11 +28,11 @@ exports.signup = (req, res, next) => {
                 email: email,
                 password: hashedPassword,
                 username: username,
-                userid: id
+                userId: userId
             })
             return admin.save()
         }).then(result => {
-
+            console.log(result)
             res.status(200).json({
                 message: 'Sign up successful',
                 admin: result
@@ -282,7 +282,7 @@ exports.getAllAdmins = async (req, res, next) => {
 
 exports.deleteAdmin = async (req, res, next) => {
     try {
-        const adminid = req.params.aid;
+        const adminid = req.params.id;
         if (!adminid) {
             const error = new Error("adminid is undefined, make sure to add a adminid in the params");
             error.statusCode = 401;
@@ -296,3 +296,66 @@ exports.deleteAdmin = async (req, res, next) => {
         console.log(err)
     }
 }
+
+exports.getAdmin = async (req, res, next) => {
+    const id = req.params.id;
+    console.log(id);
+    try {
+
+        const admin = await Admin.findById(id);
+
+
+        if (!admin) {
+
+            const error = new Error("staff doesn't exist");
+            error.statusCode = 401;
+            throw error;
+        }
+
+        res.status(200).json({
+            message: "fetch Admin success!",
+            admin: admin
+        })
+
+
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+
+
+}
+
+
+
+
+exports.editAdmin = async (req, res, next) => {
+    const name = req.body.name;
+    const password = req.body.password;
+    const email = req.body.email;
+
+    var userId = req.body.userId
+    const id = req.params.id
+    try {
+        let admin = await Admin.findOne({ _id: id })
+
+
+        admin.name = name;
+        admin.email = email;
+        admin.userId = userId;
+        let editedAdmin = await admin.save()
+        res.status(200).json({
+            message: "Success",
+            editedAdmin: editedAdmin
+        })
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+
+}
+

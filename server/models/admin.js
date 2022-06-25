@@ -18,7 +18,9 @@ const adminSchema = new Schema({
     },
     userId: {
         type: Number,
-        unique: true
+       required: true,
+       unique: true
+
 
     },
     password: {

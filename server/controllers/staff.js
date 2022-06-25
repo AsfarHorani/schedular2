@@ -30,7 +30,7 @@ exports.signup = (req, res, next) => {
                 userId: userId,
                 username: username,
                 depart: depart,
-              
+
                 qualification: qualification
             })
             return staff.save()
@@ -245,7 +245,7 @@ exports.deleteStaffRow = async (req, res, next) => {
         const day = req.body.day;
         const ind = req.body.id;
         const id = req.params.id;
-        console.log(req.body, ind, day)
+
         const st = await Staff.findById(id);
         let table = st.timetable;
         table[day].splice(id, 1);
@@ -263,3 +263,42 @@ exports.deleteStaffRow = async (req, res, next) => {
         next(err);
     }
 }
+
+exports.addStaffRow = async (req, res, next) => {
+    try {
+        const day = req.body.day;
+        const ind = req.body.ind;
+
+
+
+
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}
+
+exports.addOfficeHours = async (req, res, next) => {
+
+    const id = req.params.id;
+    const ohrs = req.body.hours;
+    try {
+        let staff = await Staff.findOne({ _id: id })
+        staff.officeHours = ohrs;
+        const resp = await staff.save()
+        console.log(resp)
+        res.status(200).json({
+            message: "success",
+            staff: resp
+        })
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}
+
+

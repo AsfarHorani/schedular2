@@ -23,6 +23,7 @@ function Sidebar() {
             <ul>
                 <li onClick={() => clickHandler("staff")} >Staff</li>
                 <li onClick={() => clickHandler("students")} >Students</li>
+                <li onClick={() => clickHandler("admins")} >Admins</li>
             </ul>
         </div>
     )

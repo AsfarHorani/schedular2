@@ -5,7 +5,7 @@ const Staff = require("../models/staff");
 const { body, check } = require('express-validator');
 
 router.post('/staff-signin', staffController.signin);
-router.post('/staff-signup',[
+router.post('/staff-signup', [
     body('email', "email has to be valid").isEmail()
         .withMessage('Please enter a valid email address.')
         .normalizeEmail().custom(async value => {
@@ -23,26 +23,22 @@ router.post('/staff-signup',[
             }
         }),
     body('password', 'Password has to be valid.')
-        .isLength({ min: 8 })
-        .trim()
-            .isEmpty()
-,
+        .isLength({ min: 8 }),
 
     body('name', "Name is't correct")
         .trim()
         .isLength({ min: 3 }),
-        
-    body('username', "username is't correct,min length 3")
-    .trim()
-    .isEmpty()
-    .isLength({ min: 3 }),
+
+    body('username', "username is't correct,min length 5")
+        .isLength({ min:5 })
+        .trim(),
     body('depart', "depart is't correct, min length 3")
-    .trim()
-    .isLength({ min: 3 }),
+        .trim()
+        .isLength({ min: 3 }),
     body('qualification', "qualification is't correct, min length 3")
-    
-    .trim()
-    .isLength({ min: 3 }),
+
+        .trim()
+        .isLength({ min: 3 }),
 ], staffController.signup);
 
 //getTimeTable
@@ -62,9 +58,11 @@ router.put('/editStaff/:id', staffController.editStaff);
 
 //delete
 
-router.delete('/deleteStaff/:id',staffController.deleteStaff);
+router.delete('/deleteStaff/:id', staffController.deleteStaff);
 router.post('/staff-deleteRow/:id', staffController.deleteStaffRow);
+
+router.post('/addOfficeHours/:id', staffController.addOfficeHours);
 module.exports = router;
 
-//update table
+
 

@@ -8,6 +8,7 @@ import Studentdashboard from './pages/dashboard/student/studentdashboard';
 
 import StaffProfile from './components/staffprofile';
 import StudentProfile from './components/studentProfile';
+import AdminProfile from './components/adminprofile';
 
 import Header from './components/header/header';
 import Sidebar from './components/sidebar/sidebar';
@@ -40,11 +41,11 @@ function App() {
         <Route exact path='/Admin-dashboard' element={<Admindashboard />} />
         <Route exact path='/Staff-dashboard' element={<Staffdashboard />} />
         <Route exact path='/Student-dashboard' element={<Studentdashboard />} />
-   
+        <Route path="/a/:id" element={<AdminProfile />} />
         <Route path="/u/:id" element={<StaffProfile />} />
         <Route path="/s/:id" element={<StudentProfile />} />
         <Route path="/addStaffTimeTable" element={<AddStaffTable />} />
-        <Route  path="addStudentTimeTable" element={<AddStudentTable/>}/>
+        <Route path="addStudentTimeTable" element={<AddStudentTable />} />
         <Route path="/addUser" element={<AddUser />} />
 
         <Route exact path="/signin" element={<Signin />} />

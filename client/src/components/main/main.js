@@ -25,7 +25,11 @@ function Main(props){
     )
   }
   else if (props.navselected === "admins") {
-    <Admins/>
+    console.log("admins");
+    content = (
+      <>
+      <Admins/>
+      </>)
 }
 
   return (<div className="main container">{content}</div>)

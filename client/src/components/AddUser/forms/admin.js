@@ -3,14 +3,14 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from 'axios';
 
-function Admin() {
-  const formik = useFormik({
+function Admin({admin,edit}) {
+    const formik = useFormik({
         initialValues: {
-            name: "",
-            email: "",
-            username: "",
-            staffId: "",
-            password: "",
+            name: admin.name || "",
+            email: admin.email ||  "",
+            username: admin.username ||"",
+            adminId:  admin.userId || "",
+            password: admin.password || "",
 
         },
         validationSchema: yup.object({
@@ -18,9 +18,9 @@ function Admin() {
             username: yup.string().max(12, "Username must be between 10 and 5 characters").min(5, "Username must be between 10 and 5 characters").required("Required"),
             password: yup.string().required('Pssword Required.').min(8, 'Password is too short - should be 8 characters minimum.').matches(/^[a-zA-Z0-9]+$/, 'Password can only letters and numbers.'),
             email: yup.string().email("Please enter a vaid email").required("Required"),
-            staffId: yup.number()
-       
-          }),
+            adminId: yup.number()
+
+        }),
         onSubmit: (values) => {
 
             const body = {
@@ -28,18 +28,33 @@ function Admin() {
                 email: values.email,
                 username: values.username,
                 password: values.password,
-                staffId: values.staffId
+                userId: values.adminId
             }
-           async function postReq(){
-            try{
-            let resp = await axios.post("http://localhost:5000/admin-signup",body);
-            console.log(resp.data);
-            }catch(err){
-                console.log(err)
+            async function postReq() {
+                try {
+                    let resp = await axios.post("http://localhost:5000/admin-signup", body);
+                    console.log(resp.data);
+                } catch (err) {
+                    console.log(err)
+                }
             }
-           }
+            async function putReq() {
+                try {
+                    let resp = await axios.put("http://localhost:5000/editAdmin/" + admin._id, body);
+                    console.log(resp.data);
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+            console.log(edit)
+            if (edit) {
+                putReq();
+            }
+            else {
+                postReq();
+            }
 
-           postReq();
+         
 
 
 
@@ -56,7 +71,7 @@ function Admin() {
 
     return (
 
-       
+
         <form onSubmit={formik.handleSubmit}>
             <h4 className="pb-2">Add Admin</h4>
 
@@ -74,14 +89,14 @@ function Admin() {
 
             </div>
             <div className="form-outline mb-4">
-                <input type="text" id="staffId" className="form-control"
-                    placeholder="staffId"
+                <input type="text" id="adminId" className="form-control"
+                    placeholder="adminId"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.staffId} />
-                {formik.touched.staffId && formik.errors.staffId ? <p className='text-danger'>*{formik.errors.staffId} </p> : null}
+                    value={formik.values.adminId} />
+                {formik.touched.adminId && formik.errors.adminId ? <p className='text-danger'>*{formik.errors.adminId} </p> : null}
             </div>
-        
+
             <div className="form-outline mb-4">
                 <input type="email" id="email" className="form-control"
                     placeholder="Email address"
@@ -92,7 +107,7 @@ function Admin() {
 
             </div>
 
- <div className="form-outline mb-4">
+            <div className="form-outline mb-4">
                 <input type="text" id="username" className="form-control"
                     placeholder="Username"
                     onBlur={formik.handleBlur}
@@ -100,7 +115,7 @@ function Admin() {
                     value={formik.values.username} />
                 {formik.touched.username && formik.errors.username ? <p className='text-danger'>*{formik.errors.username} </p> : null}
             </div>
-            
+
 
             <div className="form-outline mb-4">
                 <input type="password" id="password" className="form-control" placeholder='Password'
@@ -113,10 +128,10 @@ function Admin() {
 
             <div className="text-center pt-1  pb-1">
                 <button className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Add</button>
-             
+
             </div>
 
-         
+
 
         </form>
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Card, Button, Table } from 'react-bootstrap';
+import { Card, InputGroup, Button, FormControl, Table } from 'react-bootstrap';
 import '../../../components/userprofile.css';
 import { useParams } from "react-router-dom";
 
@@ -8,12 +8,14 @@ function Userprofile() {
     let { id } = useParams();
     const [staff, setStaff] = useState([]);
     const [edit, setEdit] = useState(false);
+    const [hours, setHours] = useState(null);
+
     console.log(setEdit)
     useEffect(() => {
         async function fetch() {
 
             if (true) {
-             
+
                 axios.get('http://localhost:5000/getStaff/62b5d3f4392ff436092c6ff5').then(resp => {
 
                     setStaff(resp.data.staff)
@@ -28,6 +30,19 @@ function Userprofile() {
         fetch();
     }, [id])
     console.log(staff.timetable)
+    const addHoursHandler = () => {
+        if (true) {
+
+            axios.post('http://localhost:5000/addOfficeHours/62b5d3f4392ff436092c6ff5',{hours}).then(resp => {
+                console.log(resp.data);
+                setStaff(resp.data.staff)
+
+
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    }
 
     let monrows = null
     let tuerows = null
@@ -75,7 +90,7 @@ function Userprofile() {
                 <tr key={i}>
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
-                    </tr>)
+                </tr>)
         })
 
 
@@ -86,35 +101,51 @@ function Userprofile() {
     }
     let infoCard = null
     if (staff) {
-        infoCard = (<Card className="card-horizontal">
-            <Card.Header as="h5">Staff Information</Card.Header>
-            <Card.Body>
-                <Card.Title>{staff.name}</Card.Title>
-                <Card.Text>
-                    Id: {staff.userId}
-                </Card.Text>
-                <Card.Text>
-                    Username: {staff.username}
-                </Card.Text>
-                <Card.Text>
-                    Qualification : {staff.qualification}
-                </Card.Text>
-                <Card.Text>
-                    Department: {staff.depart}
-                </Card.Text>
-                <Card.Text>
-                    Email: {staff.email}
-                </Card.Text>
-            
+        infoCard = (
 
-            </Card.Body>
-        </Card>)
+            <Card className="card-horizontal">
+                <Card.Header as="h5">Staff Information</Card.Header>
+                <Card.Body>
+                    <Card.Title>{staff.name}</Card.Title>
+                    <Card.Text>
+                        Id: {staff.userId}
+                    </Card.Text>
+                    <Card.Text>
+                        Hours available : {staff.officeHours}
+                    </Card.Text>
+                    <Card.Text>
+                        Username: {staff.username}
+                    </Card.Text>
+                    <Card.Text>
+                        Qualification : {staff.qualification}
+                    </Card.Text>
+                    <Card.Text>
+                        Department: {staff.depart}
+                    </Card.Text>
+                    <Card.Text>
+                        Email: {staff.email}
+                    </Card.Text>
+
+
+                </Card.Body>
+            </Card>)
     }
 
-
+   
 
     return (
         <div className="userprofile content">
+
+            <InputGroup className="mb-3">
+                <FormControl
+                    placeholder="Add office hours"
+                    value={hours}
+                    onChange={(e) => setHours(e.target.value)}
+                />
+                <Button onClick={addHoursHandler} variant="outline-secondary" id="button-addon2">
+                    Button
+                </Button>
+            </InputGroup>
             {infoCard}
             <h3>Monday</h3>
             <Table striped bordered hover size="sm">

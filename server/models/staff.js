@@ -51,7 +51,12 @@ const staffSchema = new Schema({
         friday: [
             [{ type: String },
             { type: String }]],
+    },
+    officeHours:{
+        type: Number,
+        default: 4
     }
+
 
 })
 
