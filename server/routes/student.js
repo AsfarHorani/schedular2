@@ -7,7 +7,7 @@ const { body, check } = require('express-validator');
 
 //auth
 router.post('/student-signin', studentController.signin);
-router.post('/student-signup',[
+router.post('/student-signup', [
     body('email', "email has to be valid").isEmail()
         .withMessage('Please enter a valid email address.')
         .normalizeEmail().custom(async value => {
@@ -27,20 +27,20 @@ router.post('/student-signup',[
     body('password', 'Password has to be valid.')
         .isLength({ min: 8 })
         .trim()
-            .isEmpty()
-,
+        .isEmpty()
+    ,
 
     body('name', "Name is't correct")
         .trim()
         .isLength({ min: 3 }),
-    
-    body('depart', "depart is't correct, min length 3")
-    .trim()
-    
-], studentController.signup);
-router.post('/student-uploadTimeTable',upload.single('file'), studentController.uploadTimeTable);
-router.get('/getStudents',studentController.getAllStudents)
-router.get('/getStudent/:id',studentController.getStudent)
-router.put('/editStudent/:id', studentController.editStudent);
 
+    body('depart', "depart is't correct, min length 3")
+        .trim()
+
+], studentController.signup);
+router.post('/student-uploadTimeTable', upload.single('file'), studentController.uploadTimeTable);
+router.get('/getStudents', studentController.getAllStudents)
+router.get('/getStudent/:id', studentController.getStudent)
+router.put('/editStudent/:id', studentController.editStudent);
+router.post('/addStudentRow/:id', studentController.addStudentRow)
 module.exports = router;

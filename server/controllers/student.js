@@ -107,7 +107,7 @@ exports.uploadTimeTable = async (req, res, next) => {
         if (req.fileValidationError) {
             const error = new Error(req.fileValidationError || 'Validation failed.');
             error.statusCode = 422;
-    
+
             throw error;
         }
 
@@ -331,4 +331,31 @@ exports.getStudent = async (req, res, next) => {
     }
 
 
+}
+
+exports.addStudentRow = async (req, res, next) => {
+    try {
+        const day = req.body.day;
+        const time = req.body.time;
+        const text = req.body.text;
+        const id = req.params.id;
+        console.log(req.body);
+
+        let student = await Student.findOne({ _id: id })
+        student.timetable[day].push([time, text]);
+        console.log(student.timetable[day]);
+        let resp = await student.save()
+
+        res.status(200).json({
+            student: resp,
+            message: "Success"
+        })
+
+
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
 }

@@ -10,6 +10,8 @@ function Userprofile() {
     let { id } = useParams();
     const [staff, setStaff] = useState([]);
     const [edit, setEdit] = useState(false);
+    const [addObjSel, setAddObjSel] = useState({ add: false, day: '' });
+    const [newRow, setNewRow] = useState({ time: null, text: null })
     console.log(setEdit)
     useEffect(() => {
         async function fetch() {
@@ -51,7 +53,19 @@ function Userprofile() {
         const body = { id: id, day: day }
         console.log(body)
         try {
-            let resp = await axios.post("http://localhost:5000/staff-deleteRow/" + staff._id, body 
+            let resp = await axios.post("http://localhost:5000/staff-deleteRow/" + staff._id, body
+            );
+            console.log(resp.data);
+            setStaff(resp.data.staff);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    const addRowHandler = async () => {
+        try {
+            let body = { ...newRow, day: addObjSel.day }
+            console.log(body);
+            let resp = await axios.post("http://localhost:5000/addStaffRow/" + staff._id, body
             );
             console.log(resp.data);
             setStaff(resp.data.staff);
@@ -60,7 +74,6 @@ function Userprofile() {
         }
     }
 
-
     if (staff.timetable) {
         monrows = staff.timetable.monday.map((e, i) => {
             return (
@@ -68,6 +81,7 @@ function Userprofile() {
                     <td>{e[0]}</td>
                     <td>{e[1]}</td>
                     <td onClick={() => deleteRowHandler(i, "monday")}><BsFillTrashFill /></td>
+
                 </tr>)
         })
 
@@ -151,7 +165,7 @@ function Userprofile() {
         </Card>)
     }
 
-
+    console.log(addObjSel)
     return (
         <div className="userprofile content">
             {infoCard}
@@ -170,7 +184,11 @@ function Userprofile() {
                 </thead>
                 <tbody>
                     {monrows}
-
+                    {addObjSel.add && addObjSel.day === "monday" ? <tr>
+                        <td><input onChange={(e) => setNewRow(prev => { return { ...prev, time: e.target.value } })} type="text" value={newRow.time} /></td>
+                        <td><input type="text" onChange={(e) => setNewRow(prev => { return { ...prev, text: e.target.value } })} value={newRow.text} /></td>
+                        <td onClick={addRowHandler}>AddIcon</td>
+                    </tr> : <tr onClick={() => setAddObjSel({ ...addObjSel, day: 'monday', add: true })} >Click here add new row</tr>}
                 </tbody>
             </Table>
             <h3>Tuesday</h3>
@@ -187,6 +205,12 @@ function Userprofile() {
                 <tbody>
 
                     {tuerows}
+                    {addObjSel.add && addObjSel.day === "tuesday"? <tr>
+                        <td><input onChange={(e) => setNewRow(prev => { return { ...prev, time: e.target.value } })} type="text" value={newRow.time} /></td>
+                        <td><input type="text" onChange={(e) => setNewRow(prev => { return { ...prev, text: e.target.value } })} value={newRow.text} /></td>
+                        <td onClick={addRowHandler}>AddIcon</td>
+                    </tr> : <tr onClick={() => setAddObjSel({ ...addObjSel, day: 'tuesday', add: true })} >Click here add new row</tr>}
+
                 </tbody>
             </Table>
             <h3>Wednesday</h3>
@@ -204,6 +228,12 @@ function Userprofile() {
                 <tbody>
 
                     {wedrows}
+
+                    {addObjSel.add && addObjSel.day === "wednesday" ? <tr>
+                        <td><input onChange={(e) => setNewRow(prev => { return { ...prev, time: e.target.value } })} type="text" value={newRow.time} /></td>
+                        <td><input type="text" onChange={(e) => setNewRow(prev => { return { ...prev, text: e.target.value } })} value={newRow.text} /></td>
+                        <td onClick={addRowHandler}>AddIcon</td>
+                    </tr> : <tr onClick={() => setAddObjSel({ ...addObjSel, day: 'wednesday', add: true })} >Click here add new row</tr>}
 
 
 
@@ -225,6 +255,11 @@ function Userprofile() {
 
                     {thurows}
 
+                    {addObjSel.add && addObjSel.day === "thursday"? <tr>
+                        <td><input onChange={(e) => setNewRow(prev => { return { ...prev, time: e.target.value } })} type="text" value={newRow.time} /></td>
+                        <td><input type="text" onChange={(e) => setNewRow(prev => { return { ...prev, text: e.target.value } })} value={newRow.text} /></td>
+                        <td onClick={addRowHandler}>AddIcon</td>
+                    </tr> : <tr onClick={() => setAddObjSel({ ...addObjSel, day: 'thursday', add: true })} >Click here add new row</tr>}
 
 
 
@@ -246,6 +281,11 @@ function Userprofile() {
                 <tbody>
 
                     {frirows}
+                    {addObjSel.add && addObjSel.day === "friday"?<tr>
+                        <td><input onChange={(e) => setNewRow(prev => { return { ...prev, time: e.target.value } })} type="text" value={newRow.time} /></td>
+                        <td><input type="text" onChange={(e) => setNewRow(prev => { return { ...prev, text: e.target.value } })} value={newRow.text} /></td>
+                        <td onClick={addRowHandler}>AddIcon</td>
+                    </tr> : <tr onClick={() => setAddObjSel({ ...addObjSel, day: 'friday', add: true })} >Click here add new row</tr>}
 
 
 

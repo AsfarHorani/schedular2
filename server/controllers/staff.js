@@ -245,10 +245,10 @@ exports.deleteStaffRow = async (req, res, next) => {
         const day = req.body.day;
         const ind = req.body.id;
         const id = req.params.id;
-
+        console.log(req.body)
         const st = await Staff.findById(id);
         let table = st.timetable;
-        table[day].splice(id, 1);
+        table[day].splice(ind, 1);
         st.timetable = table
 
         const resp = await st.save();
@@ -264,21 +264,6 @@ exports.deleteStaffRow = async (req, res, next) => {
     }
 }
 
-exports.addStaffRow = async (req, res, next) => {
-    try {
-        const day = req.body.day;
-        const ind = req.body.ind;
-
-
-
-
-    } catch (err) {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
-    }
-}
 
 exports.addOfficeHours = async (req, res, next) => {
 
@@ -302,3 +287,29 @@ exports.addOfficeHours = async (req, res, next) => {
 }
 
 
+exports.addStaffRow = async (req, res, next) => {
+    try {
+        const day = req.body.day;
+        const time = req.body.time;
+        const text = req.body.text;
+        const id = req.params.id;
+        console.log(req.body);
+
+        let staff = await Staff.findOne({ _id: id })    
+        staff.timetable[day].push([time,text]);
+        console.log(staff.timetable[day]);
+          let resp = await staff.save()
+
+          res.status(200).json({
+            staff: resp,
+            message:"Success"
+          })
+
+
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}

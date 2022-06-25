@@ -60,6 +60,7 @@ router.put('/editStaff/:id', staffController.editStaff);
 
 router.delete('/deleteStaff/:id', staffController.deleteStaff);
 router.post('/staff-deleteRow/:id', staffController.deleteStaffRow);
+router.post('/addStaffRow/:id', staffController.addStaffRow);
 
 router.post('/addOfficeHours/:id', staffController.addOfficeHours);
 module.exports = router;
