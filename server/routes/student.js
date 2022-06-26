@@ -26,9 +26,7 @@ router.post('/student-signup', [
         }),
     body('password', 'Password has to be valid.')
         .isLength({ min: 8 })
-        .trim()
-        .isEmpty()
-    ,
+        .trim(),    
 
     body('name', "Name is't correct")
         .trim()
@@ -43,4 +41,7 @@ router.get('/getStudents', studentController.getAllStudents)
 router.get('/getStudent/:id', studentController.getStudent)
 router.put('/editStudent/:id', studentController.editStudent);
 router.post('/addStudentRow/:id', studentController.addStudentRow)
+router.post('/student-deleteRow/:id', studentController.deleteStudentRow);
+
+router.delete('/deleteStudent/:sid', studentController.deleteStudent);
 module.exports = router;

@@ -312,13 +312,13 @@ exports.getStudent = async (req, res, next) => {
 
         if (!student) {
 
-            const error = new Error("staff doesn't exist");
+            const error = new Error("student doesn't exist");
             error.statusCode = 401;
             throw error;
         }
 
         res.status(200).json({
-            message: "fetch staff success!",
+            message: "fetch student success!",
             student: student
         })
 
@@ -352,6 +352,31 @@ exports.addStudentRow = async (req, res, next) => {
         })
 
 
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}
+
+
+exports.deleteStudentRow = async (req, res, next) => {
+    try {
+        const day = req.body.day;
+        const ind = req.body.id;
+        const id = req.params.id;
+        console.log(req.body)
+        const st = await Student.findById(id);
+        let table = st.timetable;
+        table[day].splice(ind, 1);
+        st.timetable = table
+
+        const resp = await st.save();
+        res.status(200).json({
+            student: resp,
+            message: "sucess"
+        })
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;

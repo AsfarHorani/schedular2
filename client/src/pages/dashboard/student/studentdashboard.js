@@ -14,7 +14,7 @@ function StudentDashboard() {
         async function fetch() {
 
             if (true) {
-         axios.get('http://localhost:5000/getStudent/62b4ddbb6395442e1ed2710f').then(resp => {
+         axios.get('http://localhost:5000/getStudent/62b8652c0309fb56b492dc0a').then(resp => {
                     console.log(resp)
 
                     setstudent(resp.data.student)
