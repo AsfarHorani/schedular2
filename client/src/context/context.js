@@ -17,148 +17,167 @@ export const ContextProvider = ({ children }) => {
   const navigate = useNavigate();
   
   
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   function fetchData() {
-  //     console.log("rendering app..")
-  //     const expiryDate = localStorage.getItem('expiryDate') || null;
-  //     const _token = localStorage.getItem('token') || null;
-  //     if (!_token || !expiryDate) {
-  //       return
-  //     }
-  //     console.log("signing in")
-  //     if (new Date(expiryDate) <= new Date()) {
+    function fetchData() {
+      console.log("rendering app..")
+      const expiryDate = localStorage.getItem('expiryDate') || null;
+      const _token = localStorage.getItem('token') || null;
+      if (!_token || !expiryDate) {
+        return
+      }
+      console.log("signing in")
+      if (new Date(expiryDate) <= new Date()) {
 
-  //       logoutHandler();
-  //       return;
-  //     }
+        signoutHandler();
+        return;
+      }
 
-  //     const _userInfo =  JSON.parse(localStorage.getItem('userInfo'));
-  //     console.log(_userInfo)
-  //     const remainingMilliseconds = new Date(expiryDate).getTime() - new Date().getTime();
-  //     setUserInfo(_userInfo)
-  //     setAuth(true)
-  //     navigate("/");
-  //     setToken(_token);
-  //     setAutoLogout(remainingMilliseconds);
-  //   }
+      const _userInfo =  JSON.parse(localStorage.getItem('userInfo'));
+      console.log(_userInfo)
+      const remainingMilliseconds = new Date(expiryDate).getTime() - new Date().getTime();
+      setUserInfo(_userInfo)
+      setAuth(true)
+      navigate("/");
+      setToken(_token);
+      setAutoLogout(remainingMilliseconds);
+    }
 
-  //   return fetchData();
-  // }, [isAuth])
+    return fetchData();
+  }, [isAuth])
 
-//   const signupHandler = (data) => {
-
-//     const formData = new FormData();
-//     formData.append('name', data.name);
-//     formData.append('email', data.email)
-//     formData.append('username', data.username)
-//     formData.append('password', data.password)
-//     formData.append('image', data.image)
-//      setLoading(true)
-//     axios.post('https://dasokuch.herokuapp.com/signup', formData)
-//       .then((response) => {
-        
-//         navigate("/login");
-//         setLoading(false)
-//       }).catch(err => {
-//         console.log(err.response.data);
-//         setAuthError(err.response.data.message);
-//         setLoading(false)
-//       })
-//   }
-
-  // const adminSigninHandler = (data) => {
-
-  //   setLoading(true)
-  //   axios.post('http://localhost:5000/admin-signin', data,
-  //     {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       }
-  //     })
-  //     .then((res) => {
-  //       setLoading(false)
-  //       res = res.data 
-  //       console.log(res.userInfo) 
-        
-  //       const _userInfo = {...res.userInfo, type:"admin"} 
-  //       setToken(res.token)
-  //       setUserInfo(_userInfo)
-  //       const remainingMilliseconds = 60 * 60 * 1000;
-  //       const expiryDate = new Date(
-  //         new Date().getTime() + remainingMilliseconds
-  //       );
-
-
-  //       setAutoLogout(remainingMilliseconds);
-  //       localStorage.setItem('token', res.token);
-  //       localStorage.setItem('userInfo', JSON.stringify(_userInfo));
-
-  //       localStorage.setItem('expiryDate', expiryDate.toISOString());
-  //       setAuth(true);
-  //       navigate("/");
-
-  //     }).catch(err => {
-  //       setLoading(false);
-  //       console.log(err.response.data);
-  //       setAuthError(err.response.data.message)
-  //     })
-  // }
-
-//  const studnetSigninHandler = (data) => {
-
-//     setLoading(true)
-//     axios.post('http://localhost:5000/student-signin', data,
-//       {
-//         headers: {
-//           'Content-Type': 'application/json',
-//         }
-//       })
-//       .then((res) => {
-//         setLoading(false)
-//         res = res.data 
-//         console.log(res) 
-//         return
-//         const _userInfo = {...res.userInfo, type:"admin"} 
-//         setToken(res.token)
-//         setUserInfo(_userInfo)
-//         const remainingMilliseconds = 60 * 60 * 1000;
-//         const expiryDate = new Date(
-//           new Date().getTime() + remainingMilliseconds
-//         );
-
-
-//         setAutoLogout(remainingMilliseconds);
-//         localStorage.setItem('token', res.token);
-//         localStorage.setItem('userInfo', JSON.stringify(_userInfo));
-
-//         localStorage.setItem('expiryDate', expiryDate.toISOString());
-//         setAuth(true);
-//         navigate("/");
-
-//       }).catch(err => {
-//         setLoading(false);
-//         console.log(err.response.data);
-//         setAuthError(err.response.data.message)
-//       })
-//   }
-
-
-
-  // const logoutHandler = () => {
  
-  //   localStorage.removeItem('token');
-  //   localStorage.removeItem('userInfo');
-  //   localStorage.removeItem('expiryDate');
- 
-  //   setAuth(false);
-  // }
 
-  // const setAutoLogout = milliseconds => {
-  //   setTimeout(() => {
-  //     logoutHandler();
-  //   }, milliseconds);
-  // };
+  const adminSigninHandler = (data) => {
+
+    setLoading(true)
+    axios.post('http://localhost:5000/admin-signin', data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      .then((res) => {
+        setLoading(false)
+        res = res.data 
+        console.log(res) 
+        
+        const _userInfo = {...res.userInfo, type:"admin"} 
+        setToken(_userInfo)
+        setUserInfo(_userInfo)
+        const remainingMilliseconds = 60 * 60 * 1000;
+        const expiryDate = new Date(
+          new Date().getTime() + remainingMilliseconds
+        );
+
+
+        setAutoLogout(remainingMilliseconds);
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('userInfo', JSON.stringify(_userInfo));
+
+        localStorage.setItem('expiryDate', expiryDate.toISOString());
+        setAuth(true);
+        navigate("/");
+
+      }).catch(err => {
+        setLoading(false);
+        console.log(err.response.data);
+        setAuthError(err.response.data.message)
+      })
+  }
+
+ const studnetSigninHandler = (data) => {
+
+    setLoading(true)
+    console.log(data)
+    axios.post('http://localhost:5000/student-signin', data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      .then((res) => {
+        setLoading(false)
+        res = res.data 
+        console.log(res) 
+        const _userInfo = {...res.studentInfo, type:"student"} 
+        setToken(res.token)
+        setUserInfo(_userInfo)
+        const remainingMilliseconds = 60 * 60 * 1000;
+        const expiryDate = new Date(
+          new Date().getTime() + remainingMilliseconds
+        );
+
+
+        setAutoLogout(remainingMilliseconds);
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('userInfo', JSON.stringify(_userInfo));
+
+        localStorage.setItem('expiryDate', expiryDate.toISOString());
+        setAuth(true);
+        navigate("/");
+
+      }).catch(err => {
+        setLoading(false);
+        console.log(err.response.data);
+        setAuthError(err.response.data.message)
+      })
+  }
+
+  const staffSigninHandler = (data) => {
+    console.log(data)
+    setLoading(true)
+    axios.post('http://localhost:5000/staff-signin', data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      .then((res) => {
+        setLoading(false)
+        res = res.data 
+        console.log(res) 
+        const _userInfo = {...res.staffInfo, type:"staff"} 
+        setToken(res.token)
+        setUserInfo(_userInfo)
+        const remainingMilliseconds = 60 * 60 * 1000;
+        const expiryDate = new Date(
+          new Date().getTime() + remainingMilliseconds
+        );
+
+
+        setAutoLogout(remainingMilliseconds);
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('userInfo', JSON.stringify(_userInfo));
+
+        localStorage.setItem('expiryDate', expiryDate.toISOString());
+        setAuth(true);
+        navigate("/");
+
+      }).catch(err => {
+        setLoading(false);
+        console.log(err.response.data);
+        setAuthError(err.response.data.message)
+      })
+  }
+
+
+  const signoutHandler = () => {
+ 
+    localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('expiryDate');
+    setUserInfo(null);
+    setUserInfo({type:null});
+    setAuth(false);
+    navigate("/")
+  }
+
+  const setAutoLogout = milliseconds => {
+    setTimeout(() => {
+      signoutHandler();
+    }, milliseconds);
+  };
 
 
 
@@ -177,7 +196,11 @@ export const ContextProvider = ({ children }) => {
           navselected,
           setNavselected,
           userType,
-          setUserType
+          setUserType,
+          signoutHandler,
+          studnetSigninHandler,
+          adminSigninHandler,
+          staffSigninHandler
         }
 
       }

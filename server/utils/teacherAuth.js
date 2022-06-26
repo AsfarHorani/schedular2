@@ -5,6 +5,7 @@ const jwt= require('jsonwebtoken');
 module.exports=(req,res,next)=>{
 
     const authHeader = req.get('Authorization');
+    console.log(authHeader)
     if(!authHeader){
     const error = new Error('Not authenticated')
     error.statusCode = 401;
@@ -13,7 +14,7 @@ module.exports=(req,res,next)=>{
     const token = authHeader.split(' ')[1];
     let decodedToken;
     try {
-        decodedToken = jwt.verify(token, process.env.TEACHER_AUTH_SIGNATURE);
+        decodedToken = jwt.verify(token, process.env.staff_AUTH_SIGNATURE);
       } catch (err) {
         err.statusCode = 401;
         throw err;

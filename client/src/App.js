@@ -1,5 +1,7 @@
 import './App.css';
 import Signin from './pages/auth/auth'
+import Signup from './pages/auth/signup'
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Admindashboard from './pages/dashboard/admin/admindashboard';
@@ -18,27 +20,35 @@ import AddStudentTable from './components/AddStudentTimeTable/addstudenttimetabe
 import React, { useContext, useEffect } from 'react';
 import { Context } from './context/context';
 function App() {
-  const { userType } = useContext(Context);
+  const {  token,userInfo, isAuth } = useContext(Context);
+  console.log(token)
   const IndElement = () => {
     const navigate = useNavigate();
     useEffect(() => {
-      if (userType === "admin") {
-        navigate('/Admin-dashboard')
-      } else if (userType === "staff") {
-        navigate('/Staff-dashboard')
-      } else if (userType === "admin") {
-        navigate('/Student-dashboard')
+      console.log("rendering index element")
+      if (isAuth) {
+        if (userInfo.type === "admin") {
+          navigate('/Admin-dashboard')
+        } else if (userInfo.type === "staff") {
+          navigate('/Staff-dashboard')
+        } else if (userInfo.type === "student") {
+          navigate('/Student-dashboard')
+        }
+      } else {
+        navigate('/signin')
+
       }
-    }, [userType])
+    }, [userInfo.type])
   }
   return (
     <div className="App">
-      <Header />
-      {userType === "admin" && <Sidebar />}
+       { isAuth && <Header />}
+      {userInfo && userInfo.type === "admin" && <Sidebar />}
+
       <Routes>
-        <Route path='/' exact element={<IndElement />} />
 
         <Route exact path='/Admin-dashboard' element={<Admindashboard />} />
+
         <Route exact path='/Staff-dashboard' element={<Staffdashboard />} />
         <Route exact path='/Student-dashboard' element={<Studentdashboard />} />
         <Route path="/a/:id" element={<AdminProfile />} />
@@ -47,8 +57,10 @@ function App() {
         <Route path="/addStaffTimeTable" element={<AddStaffTable />} />
         <Route path="addStudentTimeTable" element={<AddStudentTable />} />
         <Route path="/addUser" element={<AddUser />} />
-
+        <Route exact path="/signup" element={<Signup />} />
         <Route exact path="/signin" element={<Signin />} />
+        <Route path='/' element={<IndElement />} />
+
       </Routes>
     </div>
   );

@@ -8,7 +8,7 @@ import { Context } from '../../context/context';
 function AddStudentTable() {
     const [file, setFile] = useState(null);
 
-    const { userInfo } = useContext(Context);
+    const { userInfo, token } = useContext(Context);
     const submitFile = (e) => {
         e.preventDefault();
         let formData = new FormData();
@@ -18,7 +18,11 @@ function AddStudentTable() {
         console.log(formData, file)
         async function postReq() {
             try {
-                let resp = await axios.post("http://localhost:5000/student-uploadTimeTable", formData);
+                let resp = await axios.post("http://localhost:5000/student-uploadTimeTable", formData, {
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    }
+                });
                 console.log(resp.data);
             } catch (err) {
                 console.log(err.response.data)

@@ -1,10 +1,11 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Card, Button, Table } from 'react-bootstrap';
 import './userprofile.css'
 import { useParams } from "react-router-dom";
 import StaffForm from "./AddUser/forms/staff";
 import { BsFillTrashFill } from 'react-icons/bs';
+import { Context } from '../context/context';
 
 function Userprofile() {
     let { id } = useParams();
@@ -12,6 +13,7 @@ function Userprofile() {
     const [edit, setEdit] = useState(false);
     const [addObjSel, setAddObjSel] = useState({ add: false, day: '' });
     const [newRow, setNewRow] = useState({ time: null, text: null })
+    const {token} = useContext(Context);
     console.log(setEdit)
     useEffect(() => {
         async function fetch() {
@@ -41,7 +43,10 @@ function Userprofile() {
 
     const deleteHandler = async () => {
         try {
-            let resp = await axios.delete("http://localhost:5000/deleteStaff/" + staff._id);
+            let resp = await axios.delete("http://localhost:5000/deleteStaff/" + staff._id,
+            { headers: {
+                Authorization: 'Bearer ' + token
+            }});
             console.log(resp.data);
         } catch (err) {
             console.log(err)
@@ -53,7 +58,10 @@ function Userprofile() {
         const body = { id: id, day: day }
         console.log(body)
         try {
-            let resp = await axios.post("http://localhost:5000/staff-deleteRow/" + staff._id, body
+            let resp = await axios.post("http://localhost:5000/staff-deleteRow/" + staff._id, body,
+            { headers: {
+                Authorization: 'Bearer ' + token
+            }}
             );
             console.log(resp.data);
             setStaff(resp.data.staff);
@@ -65,7 +73,10 @@ function Userprofile() {
         try {
             let body = { ...newRow, day: addObjSel.day }
             console.log(body);
-            let resp = await axios.post("http://localhost:5000/addStaffRow/" + staff._id, body
+            let resp = await axios.post("http://localhost:5000/addStaffRow/" + staff._id, body,
+            { headers: {
+                Authorization: 'Bearer ' + token
+            }}
             );
             console.log(resp.data);
             setStaff(resp.data.staff);

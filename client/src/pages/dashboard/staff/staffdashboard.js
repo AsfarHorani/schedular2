@@ -1,22 +1,29 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Card, InputGroup, Button, FormControl, Table } from 'react-bootstrap';
 import '../../../components/userprofile.css';
 import { useParams } from "react-router-dom";
+import { Context } from '../../../context/context';
+import { useNavigate } from 'react-router-dom';
 
 function Userprofile() {
     let { id } = useParams();
     const [staff, setStaff] = useState([]);
     const [edit, setEdit] = useState(false);
     const [hours, setHours] = useState(null);
-
+    const { userInfo,isAuth,token } = useContext(Context);
+    const navigate = useNavigate();
+    console.log(token)
     console.log(setEdit)
     useEffect(() => {
+          if(!isAuth){
+          navigate("/signin");
+          }
         async function fetch() {
 
             if (true) {
 
-                axios.get('http://localhost:5000/getStaff/62b863554a467c90541ca2ce').then(resp => {
+                axios.get('http://localhost:5000/getStaff/' + userInfo._id).then(resp => {
 
                     setStaff(resp.data.staff)
 
@@ -28,12 +35,14 @@ function Userprofile() {
 
         }
         fetch();
-    }, [id])
+    }, [id,isAuth])
     console.log(staff.timetable)
     const addHoursHandler = () => {
-        if (true) {
+        if (userInfo) {
 
-            axios.post('http://localhost:5000/addOfficeHours/62b5d3f4392ff436092c6ff5',{hours}).then(resp => {
+            axios.post('http://localhost:5000/addOfficeHours/'+userInfo._id, { hours },{ headers: {
+                Authorization: 'Bearer ' + token
+            }}).then(resp => {
                 console.log(resp.data);
                 setStaff(resp.data.staff)
 
@@ -131,7 +140,7 @@ function Userprofile() {
             </Card>)
     }
 
-   
+
 
     return (
         <div className="userprofile content">

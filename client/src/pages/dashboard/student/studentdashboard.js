@@ -1,21 +1,28 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Card, Button, Table } from 'react-bootstrap';
 import '../../../components/userprofile.css';
 import { useParams } from "react-router-dom";
+import { Context } from '../../../context/context';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function StudentDashboard() {
     let { id } = useParams();
     const [student, setstudent] = useState([]);
+    const { userInfo,isAuth,token } = useContext(Context);
+    const navigate = useNavigate();
 
     useEffect(() => {
+        if (!isAuth) {
+            navigate("/signin");
+        }
         async function fetch() {
 
-            if (true) {
-         axios.get('http://localhost:5000/getStudent/62b8652c0309fb56b492dc0a').then(resp => {
-                    console.log(resp)
+            if (userInfo) {
+                axios.get('http://localhost:5000/getStudent/'+userInfo._id).then(resp => {
+                  console.log(resp)
 
                     setstudent(resp.data.student)
 
@@ -92,7 +99,7 @@ function StudentDashboard() {
     }
     let infoCard = null
     if (student) {
-        infoCard=(<Card className="card-horizontal">
+        infoCard = (<Card className="card-horizontal">
             <Card.Header as="h5">Student Information</Card.Header>
             <Card.Body>
                 <Card.Title>{student.name}</Card.Title>

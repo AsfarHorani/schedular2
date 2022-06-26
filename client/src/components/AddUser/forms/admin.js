@@ -1,22 +1,25 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from 'axios';
+import { Context } from '../../../context/context';
 
 function Admin({admin,edit}) {
+    const {token} = useContext(Context)
+    console.log(admin)
     const formik = useFormik({
         initialValues: {
-            name: admin.name || "",
-            email: admin.email ||  "",
-            username: admin.username ||"",
-            adminId:  admin.userId || "",
-            password: admin.password || "",
+            name: admin? admin.name : "",
+            email:  admin? admin.email :  "",
+            username:  admin? admin.username :"",
+            adminId:  admin? admin.userId : "",
+            password: null,
 
         },
         validationSchema: yup.object({
             name: yup.string().max(30, "Must be 15 charaters or less").min(3, "Name must have atleast 3 characters").required("Required"),
             username: yup.string().max(12, "Username must be between 10 and 5 characters").min(5, "Username must be between 10 and 5 characters").required("Required"),
-            password: yup.string().required('Pssword Required.').min(8, 'Password is too short - should be 8 characters minimum.').matches(/^[a-zA-Z0-9]+$/, 'Password can only letters and numbers.'),
+            password: yup.string(),
             email: yup.string().email("Please enter a vaid email").required("Required"),
             adminId: yup.number()
 
@@ -32,7 +35,10 @@ function Admin({admin,edit}) {
             }
             async function postReq() {
                 try {
-                    let resp = await axios.post("http://localhost:5000/admin-signup", body);
+                    let resp = await axios.post("http://localhost:5000/admin-signup", body,
+                    { headers: {
+                        Authorization: 'Bearer ' + token
+                    }});
                     console.log(resp.data);
                 } catch (err) {
                     console.log(err)
@@ -40,7 +46,10 @@ function Admin({admin,edit}) {
             }
             async function putReq() {
                 try {
-                    let resp = await axios.put("http://localhost:5000/editAdmin/" + admin._id, body);
+                    let resp = await axios.put("http://localhost:5000/editAdmin/" + admin._id, body,
+                    { headers: {
+                        Authorization: 'Bearer ' + token
+                    }});
                     console.log(resp.data);
                 } catch (err) {
                     console.log(err)
@@ -123,6 +132,7 @@ function Admin({admin,edit}) {
                     onChange={formik.handleChange}
                     value={formik.values.password} />
                 {formik.touched.password && formik.errors.password ? <p className='text-danger'>*{formik.errors.password} </p> : null}
+                <p>Update password only if u want to change it otherwise ignore it</p>
 
             </div>
 

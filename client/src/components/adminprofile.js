@@ -11,12 +11,17 @@ function Userprofile() {
     let { id } = useParams();
     const [admin, setadmin] = useState([]);
     const [edit, setEdit] = useState(false);
+    const {token} = useContext(Context)
     useEffect(() => {
         async function fetch() {
 
             if (id) {
-                axios.get('http://localhost:5000/getAdmin/' + id).then(resp => {
-             console.log(resp.data)
+                axios.get('http://localhost:5000/getAdmin/' + id, {
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    }
+                }).then(resp => {
+                    console.log(resp.data)
                     setadmin(resp.data.admin)
 
                 }).catch(err => {
@@ -30,7 +35,12 @@ function Userprofile() {
 
     const deleteHandler = async () => {
         try {
-            let resp = await axios.delete("http://localhost:5000/deleteAdmin/" + admin._id);
+            let resp = await axios.delete("http://localhost:5000/deleteAdmin/" + admin._id,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            });
             console.log(resp.data);
         } catch (err) {
             console.log(err)
@@ -41,7 +51,7 @@ function Userprofile() {
     let infoCard = null
     console.log(admin)
     if (admin) {
-        infoCard =   (<Card className="card-horizontal">
+        infoCard = (<Card className="card-horizontal">
             <Card.Header as="h5">Admin Information</Card.Header>
             <Card.Body>
                 <Card.Title>{admin.name}</Card.Title>

@@ -1,12 +1,13 @@
-import React,{useState}from 'react'
+import React,{useContext, useState}from 'react'
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 
 
 import "./AddStaffTable.css"
+import { Context } from '../../context/context';
 function AddStaffTable() {
     const [file,setFile] = useState(null);
-    
+    const {token} = useContext(Context);
     
     const submitFile=(e)=>{
       e.preventDefault();
@@ -15,7 +16,9 @@ function AddStaffTable() {
         console.log(formData,file)
         async function postReq(){
             try{
-            let resp = await axios.post("http://localhost:5000/admin-uploadTimeTable",formData);
+            let resp = await axios.post("http://localhost:5000/admin-uploadTimeTable",formData,{ headers: {
+                Authorization: 'Bearer ' + token
+            }});
             console.log(resp.data);
             }catch(err){
                 console.log(err)

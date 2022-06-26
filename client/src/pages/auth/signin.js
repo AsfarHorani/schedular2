@@ -2,10 +2,11 @@ import React, { useContext, useState, useEffect } from 'react'
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Context } from '../../context/context';
+import { Link } from 'react-router-dom';
 
 function Signin({ type }) {
 
-    const { adminSigninHandler, studnetSigninHandler, isAuth, loading, authError } = useContext(Context)
+    const { staffSigninHandler, adminSigninHandler, studnetSigninHandler, isAuth, loading, authError } = useContext(Context)
 
     useEffect(() => {
         console.log("rendering...")
@@ -22,13 +23,15 @@ function Signin({ type }) {
         onSubmit: (values) => {
             console.log(values)
             if (type === "admin") {
+                console.log(type);
                 adminSigninHandler({ email: values.email, password: values.password })
             } else if (type === "student") {
 
                 studnetSigninHandler({ email: values.email, password: values.password })
             }
             else if (type === "staff") {
-                console.log(values)
+                staffSigninHandler({ email: values.email, password: values.password })
+
             }
         }
 
@@ -36,10 +39,9 @@ function Signin({ type }) {
 
     )
 
-
-
-    return (
-        <form onSubmit={formik.handleSubmit}>
+    let formELements = (<></>);
+    if (type) {
+        formELements = (<form onSubmit={formik.handleSubmit}>
 
 
             <div className="form-outline mb-4">
@@ -63,15 +65,20 @@ function Signin({ type }) {
 
             <div className="text-center pt-1 mb-5 pb-1">
                 <button className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" key="submit" type="submit">Signin</button>
-                <a className="text-muted" href="#!">Forgot password?</a>
+                
             </div>
 
             <div className="d-flex align-items-center justify-content-center pb-4">
                 <p className="mb-0 me-2">Don't have an account?</p>
-                <button type="button" className="btn btn-outline-danger">Create new</button>
+                <Link type="button" to="/signup" className="btn btn-outline-danger">Create new Admin if have no one(You can remove this option later)</Link>
             </div>
 
-        </form>
+        </form>)
+    }
+    return (
+        <>
+        { formELements }
+        </>
     )
 }
 

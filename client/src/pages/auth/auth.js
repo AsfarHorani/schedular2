@@ -12,7 +12,7 @@ function Auth() {
         <div className="px-2 py-1">
             <div className="row d-flex justify-content-center align-items-center">
                 <div className="col-xl-11">
-                    <div className="card rounded-3 text-black">
+                    <div className=" rounded-3 text-black">
                         <div className="row card-row g-0">
                             <div className="col-lg-6">
                                 <div className="card-body px-md-5  py-md-3 mx-md-4 my-md-4 my-3">

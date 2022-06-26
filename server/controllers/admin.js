@@ -104,7 +104,7 @@ exports.signin = (req, res, next) => {
 }
 
 exports.uploadTimeTable = async (req, res, next) => {
- 
+
 
 
 
@@ -113,7 +113,7 @@ exports.uploadTimeTable = async (req, res, next) => {
         if (req.fileValidationError) {
             const error = new Error(req.fileValidationError || 'Validation failed.');
             error.statusCode = 422;
-    
+
             throw error;
         }
         let data = []
@@ -153,7 +153,7 @@ exports.uploadTimeTable = async (req, res, next) => {
         table.push([]);
         let i = 0;
         let userIds = []
-    
+
 
         fs.createReadStream(req.file.path)
             .pipe(parse({ delimiter: ",", from_line: 1 }))
@@ -338,6 +338,9 @@ exports.editAdmin = async (req, res, next) => {
 
     var userId = req.body.userId
     const id = req.params.id
+    let encPass=null;
+    if (password) {  encPass = await bcrypt.hash(password, 12) }
+
     try {
         let admin = await Admin.findOne({ _id: id })
 
@@ -345,6 +348,7 @@ exports.editAdmin = async (req, res, next) => {
         admin.name = name;
         admin.email = email;
         admin.userId = userId;
+        if(encPass){admin.password=encPass};
         let editedAdmin = await admin.save()
         res.status(200).json({
             message: "Success",

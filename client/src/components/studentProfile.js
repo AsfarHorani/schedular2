@@ -12,7 +12,7 @@ function Userprofile() {
     let { id } = useParams();
     const [student, setstudent] = useState([]);
     const [edit, setEdit] = useState(false);
-    const { userInfo, setUserInfo } = useContext(Context);
+    const { userInfo, setUserInfo,token } = useContext(Context);
     const [addObjSel, setAddObjSel] = useState({ add: false, day: '' });
     const [newRow, setNewRow] = useState({ time: null, text: null })
     console.log(setEdit)
@@ -44,7 +44,10 @@ function Userprofile() {
 
     const deleteHandler = async () => {
         try {
-            let resp = await axios.delete("http://localhost:5000/deleteStudent/" + student._id);
+            let resp = await axios.delete("http://localhost:5000/deleteStudent/" + student._id,
+            { headers: {
+                Authorization: 'Bearer ' + token
+            }});
             console.log(resp.data);
         } catch (err) {
             console.log(err)
@@ -55,7 +58,10 @@ function Userprofile() {
         const body = { id: id, day: day }
         console.log(body)
         try {
-            let resp = await axios.post("http://localhost:5000/student-deleteRow/" + student._id, body
+            let resp = await axios.post("http://localhost:5000/student-deleteRow/" + student._id, body,
+            { headers: {
+                Authorization: 'Bearer ' + token
+            }}
             );
             console.log(resp.data);
             setstudent(resp.data.student);
@@ -67,7 +73,10 @@ function Userprofile() {
         try {
             let body = { ...newRow, day: addObjSel.day }
             console.log(body);
-            let resp = await axios.post("http://localhost:5000/addStudentRow/" + student._id, body
+            let resp = await axios.post("http://localhost:5000/addStudentRow/" + student._id, body,
+            { headers: {
+                Authorization: 'Bearer ' + token
+            }}
             );
             console.log(resp.data);
             setstudent(resp.data.student);

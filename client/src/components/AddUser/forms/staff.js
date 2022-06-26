@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
-import { useFormik } from "formik";
+import React, { useEffect,useContext } from 'react'
+import { useFormik, useFormikContext } from "formik";
 import * as yup from "yup";
 import axios from 'axios';
+import { Context } from '../../../context/context';
 
 function Staff({ edit, staff }) {
- 
+    const {token} = useContext(Context);
     let initVal = {}
     let initVal2 = { ...initVal }
     useEffect(() => {
@@ -22,13 +23,13 @@ function Staff({ edit, staff }) {
             qualification:staff? staff.qualification : "",
             depart: staff ? staff.depart:"",
             userId: staff ? staff.userId:"",
-            password:  staff? staff.password :"",
+            password:  null,
         },
         enableReinitialize: true,
         validationSchema: yup.object({
             name: yup.string().max(30, "Must be 15 charaters or less").min(3, "Name must have atleast 3 characters").required("Required"),
             username: yup.string().max(12, "Username must be between 10 and 5 characters").min(5, "Username must be between 10 and 5 characters").required("Required"),
-            password: yup.string().required('Pssword Required.'),
+            password: yup.string(),
             email: yup.string().email("Please enter a vaid email").required("Required"),
             depart: yup.string().max(20, "Must be 15 charaters or less").min(3, "Name must have atleast 3 characters").required("Required"),
             qualification: yup.string().max(40, "Must be 15 charaters or less").min(3, "Name must have atleast 3 characters").required("Required"),
@@ -51,7 +52,10 @@ function Staff({ edit, staff }) {
             console.log(body)
             async function postReq() {
                 try {
-                    let resp = await axios.post("http://localhost:5000/staff-signup", body);
+                    let resp = await axios.post("http://localhost:5000/staff-signup", body,
+                    { headers: {
+                        Authorization: 'Bearer ' + token
+                    }});
                     console.log(resp.data);
                 } catch (err) {
                     console.log(err)
@@ -59,7 +63,10 @@ function Staff({ edit, staff }) {
             }
             async function putReq() {
                 try {
-                    let resp = await axios.put("http://localhost:5000/editStaff/"+staff._id, body);
+                    let resp = await axios.put("http://localhost:5000/editStaff/"+staff._id, body,
+                    { headers: {
+                        Authorization: 'Bearer ' + token
+                    }});
                     console.log(resp.data);
                 } catch (err) {
                     console.log(err)
@@ -154,6 +161,7 @@ function Staff({ edit, staff }) {
                     onChange={formik.handleChange}
                     value={formik.values.password} />
                 {formik.touched.password && formik.errors.password ? <p className='text-danger'>*{formik.errors.password} </p> : null}
+                <p>Update password only if u want to change it otherwise ignore it</p>
 
             </div>
 

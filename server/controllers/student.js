@@ -279,6 +279,9 @@ exports.editStudent = async (req, res, next) => {
     const depart = req.body.depart;
     var userId = Math.floor(10000 + Math.random() * 90000);
     const id = req.params.id
+ 
+      let encPass=null;
+      if (password) {  encPass = await bcrypt.hash(password, 12) }
     try {
         let student = await Student.findOne({ _id: id })
 
@@ -288,6 +291,7 @@ exports.editStudent = async (req, res, next) => {
         student.depart = depart;
         student.userId = userId;
         student.rollNo = rollNo
+        if(encPass){student.password=encPass};
         let editedStd = await student.save()
         res.status(200).json({
             message: "Success",

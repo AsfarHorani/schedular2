@@ -3,6 +3,9 @@ const router = express.Router();
 const staffController = require('../controllers/staff')
 const Staff = require("../models/staff");
 const { body, check } = require('express-validator');
+const adminAuth = require("../utils/adminAuth");
+const staffAuth = require("../utils/teacherAuth")
+
 
 router.post('/staff-signin', staffController.signin);
 router.post('/staff-signup', [
@@ -39,30 +42,30 @@ router.post('/staff-signup', [
 
         .trim()
         .isLength({ min: 3 }),
-], staffController.signup);
+],adminAuth, staffController.signup);
 
 //getTimeTable
 router.get('/getTimetable/:id', staffController.getTimeTable);
 
 //get staff
 
-router.get('/getAllStaff', staffController.getAllStaff);
+router.get('/getAllStaff',adminAuth, staffController.getAllStaff);
 router.get('/getStaff/:id', staffController.getStaff);
 
 
 
 //put
 
-router.put('/editStaff/:id', staffController.editStaff);
+router.put('/editStaff/:id',adminAuth, staffController.editStaff);
 
 
 //delete
 
-router.delete('/deleteStaff/:id', staffController.deleteStaff);
-router.post('/staff-deleteRow/:id', staffController.deleteStaffRow);
-router.post('/addStaffRow/:id', staffController.addStaffRow);
+router.delete('/deleteStaff/:id',adminAuth, staffController.deleteStaff);
+router.post('/staff-deleteRow/:id',adminAuth, staffController.deleteStaffRow);
+router.post('/addStaffRow/:id',adminAuth, staffController.addStaffRow);
 
-router.post('/addOfficeHours/:id', staffController.addOfficeHours);
+router.post('/addOfficeHours/:id',staffAuth, staffController.addOfficeHours);
 module.exports = router;
 
 

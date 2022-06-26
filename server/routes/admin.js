@@ -4,6 +4,7 @@ const adminController = require('../controllers/admin')
 const upload = require('../utils/multer')
 const { body, check } = require('express-validator');
 const Admin = require('../models/admin');
+const adminAuth = require("../utils/adminAuth");
 //auth
 
 router.post('/admin-signin', adminController.signin);
@@ -24,10 +25,10 @@ router.post('/admin-signup', [
         .trim()
         .isLength({ min: 3 }),
 ], adminController.signup);
-router.post('/admin-uploadTimeTable', upload.single('file'), adminController.uploadTimeTable);
-router.get('/getAdmins', adminController.getAllAdmins)
-router.get('/getAdmin/:id', adminController.getAdmin)
-router.put('/editAdmin/:id', adminController.editAdmin);
-router.delete('/deleteAdmin/:id', adminController.deleteAdmin);
+router.post('/admin-uploadTimeTable', adminAuth,upload.single('file'), adminController.uploadTimeTable);
+router.get('/getAdmins',adminAuth, adminController.getAllAdmins)
+router.get('/getAdmin/:id',adminAuth, adminController.getAdmin)
+router.put('/editAdmin/:id',adminAuth, adminController.editAdmin);
+router.delete('/deleteAdmin/:id',adminAuth, adminController.deleteAdmin);
 
 module.exports = router;

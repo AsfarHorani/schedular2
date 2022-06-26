@@ -56,6 +56,7 @@ exports.signin = (req, res, next) => {
 
     const email = req.body.email;
     const password = req.body.password;
+    console.log(req.body)
     let loadedstaff;
     Staff.findOne({ email: email })
         .then(staff => {
@@ -216,6 +217,8 @@ exports.editStaff = async (req, res, next) => {
     const id = req.params.id;
     const qualification = req.body.qualification;
     console.log(qualification);
+    let encPass=null;
+    if (password) {  encPass = await bcrypt.hash(password, 12) }
     try {
         let staff = await Staff.findOne({ _id: id })
 
@@ -226,6 +229,8 @@ exports.editStaff = async (req, res, next) => {
         staff.depart = depart;
         staff.userId = userId;
         staff.qualification = qualification
+ 
+        if(encPass){staff.password=encPass};
         let editedStaff = await staff.save()
         res.status(200).json({
             message: "Success",
