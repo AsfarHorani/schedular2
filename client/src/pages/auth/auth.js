@@ -32,7 +32,7 @@ function Auth() {
 
                                 <div className="text-center">
                                     <img className="img" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp" alt="logo" />
-                                    <h2 className="mt-1 mb-5 pb-1">We are The Lotus Team</h2>
+                                    <h2 className="mt-1 mb-5 pb-1">University meeting schedular</h2>
                                 </div>
                                 <div className="text-white px-3  p-md-5 mx-md-4">
                                     <h4 className="mb-4">We are more than just a company</h4>
